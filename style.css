@@ -1,11 +1,11 @@
 :root {
-  --bg-main: #0D1117;
-  --bg-card: #161B22;
-  --bg-hover: #1C222B;
-  --bg-header: #0D1117;
+  --bg-main: #090D12;
+  --bg-card: #11161D;
+  --bg-hover: #181E26;
+  --bg-header: #090D12;
 
-  --gold: #F4C430;
-  --gold-hover: #FFD34E;
+  --gold: #D4A514;
+  --gold-hover: #E0B126;
 
   --text-main: #EAEAEA;
   --text-muted: #9CA3AF;
