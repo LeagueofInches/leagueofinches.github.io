@@ -1,3 +1,21 @@
+:root {
+  --bg-main: #0D1117;
+  --bg-card: #161B22;
+  --bg-hover: #1C222B;
+
+  --gold: #F4C430;
+  --gold-hover: #FFD34E;
+
+  --text-main: #EAEAEA;
+  --text-muted: #9CA3AF;
+
+  --border-subtle: rgba(255, 255, 255, 0.10);
+  --border-gold: rgba(244, 196, 48, 0.65);
+  --border-gold-nav: rgba(244, 196, 48, 0.70);
+
+  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -950,5 +968,394 @@ main p {
     align-items: flex-start;
     flex-direction: column;
   }
+
+  /* ========================================
+   STEALTH GOLD THEME
+   ======================================== */
+
+
+/* GLOBAL */
+
+body {
+  background: var(--bg-main);
+  color: var(--text-main);
+}
+
+main p {
+  color: var(--text-muted);
+}
+
+.eyebrow {
+  color: var(--gold);
+}
+
+
+/* HEADER */
+
+.site-header {
+  background: var(--bg-main);
+  border-bottom: 1px solid var(--border-gold-nav);
+}
+
+.site-brand {
+  color: var(--text-main);
+}
+
+.site-brand span {
+  color: var(--gold);
+}
+
+.main-nav a {
+  color: var(--text-main);
+}
+
+.main-nav a:hover {
+  color: var(--gold);
+}
+
+
+/* MOBILE NAV */
+
+.mobile-nav summary {
+  color: var(--text-main);
+}
+
+.mobile-nav-links {
+  background: var(--bg-main);
+  border-bottom: 1px solid var(--border-gold-nav);
+}
+
+.mobile-nav-links a {
+  color: var(--text-main);
+  border-bottom-color: var(--border-subtle);
+}
+
+.mobile-nav-links a:hover {
+  color: var(--gold);
+}
+
+
+/* BUTTONS */
+
+.button.primary {
+  background: var(--gold);
+  color: var(--bg-main);
+  border: 1px solid var(--gold);
+}
+
+.button.primary:hover {
+  background: var(--gold-hover);
+  border-color: var(--gold-hover);
+}
+
+.button.secondary {
+  background: transparent;
+  color: var(--text-main);
+  border: 1px solid #4B5563;
+}
+
+.button.secondary:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+}
+
+
+/* PAGE HEADERS */
+
+.page-header {
+  border-bottom-color: var(--border-subtle);
+}
+
+.page-header h2 {
+  color: var(--text-main);
+}
+
+.page-description {
+  color: var(--text-muted);
+}
+
+
+/* STANDINGS */
+
+.season-selector {
+  background: var(--bg-card);
+  color: var(--text-main);
+  border-color: var(--border-subtle);
+}
+
+.table-wrapper {
+  border-color: var(--border-subtle);
+}
+
+.standings-table {
+  background: var(--bg-card);
+}
+
+.standings-table th {
+  background: var(--bg-card);
+  color: var(--gold);
+  border-bottom-color: var(--border-subtle);
+}
+
+.standings-table td {
+  color: var(--text-main);
+  border-bottom-color: var(--border-subtle);
+}
+
+.standings-table tbody tr:hover {
+  background: var(--bg-hover);
+}
+
+.standings-table td:nth-child(1) {
+  color: var(--gold);
+}
+
+.standings-table td:nth-child(2) {
+  color: var(--text-main);
+}
+
+
+/* RECORD BOOK */
+
+.record-card {
+  background: var(--bg-card);
+  border-color: var(--border-subtle);
+  box-shadow: var(--shadow-card);
+}
+
+.record-card::before {
+  background: var(--gold);
+}
+
+.record-label {
+  color: var(--text-muted);
+}
+
+.record-card h3 {
+  color: var(--text-main);
+}
+
+.record-holder {
+  color: var(--gold);
+}
+
+.record-meta {
+  color: var(--text-muted);
+}
+
+
+/* CHAMPIONS */
+
+.champion-card {
+  background: var(--bg-card);
+  border-color: var(--border-subtle);
+  box-shadow: var(--shadow-card);
+}
+
+.champion-card.featured-champion {
+  border-color: var(--border-gold);
+  box-shadow: var(--shadow-card);
+}
+
+.champion-year {
+  color: var(--gold);
+}
+
+.champion-label {
+  color: var(--text-muted);
+}
+
+.champion-card h3 {
+  color: var(--text-main);
+}
+
+.champion-placements {
+  border-top-color: var(--border-subtle);
+}
+
+.champion-placements p {
+  color: var(--text-muted);
+}
+
+.champion-placements p span {
+  color: var(--gold);
+}
+
+.scoring-leader {
+  border-top-color: var(--border-subtle);
+}
+
+.scoring-label {
+  color: var(--text-muted);
+}
+
+.scoring-leader strong {
+  color: var(--gold);
+}
+
+
+/* DRAFT HISTORY */
+
+.draft-info div {
+  background: var(--bg-card);
+  border-color: var(--border-subtle);
+}
+
+.draft-info span {
+  color: var(--text-muted);
+}
+
+.draft-info strong {
+  color: var(--text-main);
+}
+
+.draft-board-wrapper {
+  background: var(--bg-main);
+  border-color: var(--border-subtle);
+}
+
+.draft-corner,
+.draft-manager {
+  background: var(--bg-card);
+  border-color: var(--border-subtle);
+}
+
+.draft-corner {
+  color: var(--gold);
+}
+
+.draft-manager {
+  color: var(--text-main);
+}
+
+.draft-round {
+  background: var(--bg-card);
+  color: var(--gold);
+  border-color: var(--border-subtle);
+}
+
+.draft-pick {
+  background: var(--bg-card);
+  border-color: var(--border-subtle);
+}
+
+.draft-pick:hover {
+  background: var(--bg-hover);
+}
+
+.draft-pick span {
+  color: var(--gold);
+}
+
+.draft-pick strong {
+  color: var(--text-main);
+}
+
+.draft-pick small {
+  color: var(--text-muted);
+}
+
+
+/* LEAGUE NEWS */
+
+.news-card {
+  background: var(--bg-card);
+  border-color: var(--border-subtle);
+  box-shadow: var(--shadow-card);
+}
+
+.news-card.featured-news {
+  border-color: var(--border-gold);
+}
+
+.news-category {
+  color: var(--gold);
+}
+
+.news-card h3 {
+  color: var(--text-main);
+}
+
+.news-card p,
+.news-date {
+  color: var(--text-muted);
+}
+
+
+/* LEAGUE INFO */
+
+.info-card {
+  background: var(--bg-card);
+  border-color: var(--border-subtle);
+  box-shadow: var(--shadow-card);
+}
+
+.info-label {
+  color: var(--gold);
+}
+
+.info-card h3 {
+  color: var(--text-main);
+}
+
+.info-card p {
+  color: var(--text-muted);
+}
+
+
+/* HOMEPAGE */
+
+.home-feature {
+  background: var(--bg-card);
+  border-color: var(--border-subtle);
+  box-shadow: var(--shadow-card);
+}
+
+.home-feature.champion-feature {
+  border-color: var(--border-gold);
+}
+
+.home-feature a {
+  color: var(--gold);
+}
+
+.home-feature a:hover {
+  color: var(--gold-hover);
+}
+
+.home-records {
+  border-top-color: var(--border-subtle);
+}
+
+.home-section-heading a {
+  color: var(--gold);
+}
+
+.home-section-heading a:hover {
+  color: var(--gold-hover);
+}
+
+.home-record-card {
+  background: var(--bg-card);
+  border-color: var(--border-subtle);
+}
+
+.home-record-card span {
+  color: var(--text-muted);
+}
+
+.home-record-card strong {
+  color: var(--text-main);
+}
+
+
+/* GENERAL LINKS */
+
+a {
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
   
 }
