@@ -41,6 +41,11 @@ body {
   letter-spacing: 2px;
 }
 
+.site-brand {
+  text-decoration: none;
+  color: inherit;
+}
+
 .main-nav {
   display: flex;
   gap: 24px;
