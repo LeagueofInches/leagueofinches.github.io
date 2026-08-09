@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,12 +12,12 @@
 
   <header class="site-header">
     <div class="header-inner">
-  
+
       <a href="index.html" class="site-brand">
         <h1>LEAGUE OF INCHES</h1>
         <span>Fantasy Football</span>
       </a>
-  
+
       <nav class="main-nav desktop-nav">
         <a href="index.html">Home</a>
         <a href="standings.html">Standings</a>
@@ -26,10 +27,10 @@
         <a href="news.html">League News</a>
         <a href="league-info.html">League Info</a>
       </nav>
-  
+
       <details class="mobile-nav">
         <summary>☰</summary>
-  
+
         <div class="mobile-nav-links">
           <a href="index.html">Home</a>
           <a href="standings.html">Standings</a>
@@ -40,23 +41,28 @@
           <a href="league-info.html">League Info</a>
         </div>
       </details>
-  
+
     </div>
   </header>
+
 
   <main>
 
     <section class="page-header">
       <p class="eyebrow">Draft Archive</p>
+
       <h2>Draft History</h2>
+
       <p class="page-description">
         Every pick, every reach, and every draft-day decision in League of Inches history.
       </p>
     </section>
 
+
     <section class="draft-section">
 
       <div class="section-heading">
+
         <div>
           <p class="eyebrow">Draft Board</p>
           <h3>2025 Draft</h3>
@@ -68,9 +74,12 @@
           <option>2023</option>
           <option>2022</option>
         </select>
+
       </div>
 
+
       <div class="draft-info">
+
         <div>
           <span>Draft Type</span>
           <strong>Snake</strong>
@@ -85,93 +94,125 @@
           <span>Rounds</span>
           <strong>15</strong>
         </div>
+
       </div>
 
-      <div class="table-wrapper">
-        <div class="draft-board-wrapper">
-        
-          <div class="draft-board">
-        
-            <!-- MANAGER HEADERS -->
-            <div class="draft-corner">RD</div>
-            <div class="draft-manager">Manager 1</div>
-            <div class="draft-manager">Manager 2</div>
-            <div class="draft-manager">Manager 3</div>
-            <div class="draft-manager">Manager 4</div>
-            <div class="draft-manager">Manager 5</div>
-            <div class="draft-manager">Manager 6</div>
-            <div class="draft-manager">Manager 7</div>
-            <div class="draft-manager">Manager 8</div>
-            <div class="draft-manager">Manager 9</div>
-            <div class="draft-manager">Manager 10</div>
-        
-            <!-- ROUND 1 -->
-            <div class="draft-round">1</div>
-        
-            <div class="draft-pick">
-              <span>1.01</span>
-              <strong>Example Player</strong>
-              <small>WR</small>
-            </div>
-        
-            <div class="draft-pick">
-              <span>1.02</span>
-              <strong>Example Player</strong>
-              <small>RB</small>
-            </div>
-        
-            <div class="draft-pick">
-              <span>1.03</span>
-              <strong>Example Player</strong>
-              <small>WR</small>
-            </div>
-        
-            <div class="draft-pick">
-              <span>1.04</span>
-              <strong>Example Player</strong>
-              <small>RB</small>
-            </div>
-        
-            <div class="draft-pick"><span>1.05</span><strong>Example Player</strong><small>WR</small></div>
-            <div class="draft-pick"><span>1.06</span><strong>Example Player</strong><small>RB</small></div>
-            <div class="draft-pick"><span>1.07</span><strong>Example Player</strong><small>QB</small></div>
-            <div class="draft-pick"><span>1.08</span><strong>Example Player</strong><small>WR</small></div>
-            <div class="draft-pick"><span>1.09</span><strong>Example Player</strong><small>RB</small></div>
-            <div class="draft-pick"><span>1.10</span><strong>Example Player</strong><small>WR</small></div>
-        
-            <!-- ROUND 2 - SNAKE BACK -->
-            <div class="draft-round">2</div>
-        
-            <div class="draft-pick"><span>2.10</span><strong>Example Player</strong><small>RB</small></div>
-            <div class="draft-pick"><span>2.09</span><strong>Example Player</strong><small>WR</small></div>
-            <div class="draft-pick"><span>2.08</span><strong>Example Player</strong><small>RB</small></div>
-            <div class="draft-pick"><span>2.07</span><strong>Example Player</strong><small>WR</small></div>
-            <div class="draft-pick"><span>2.06</span><strong>Example Player</strong><small>QB</small></div>
-            <div class="draft-pick"><span>2.05</span><strong>Example Player</strong><small>RB</small></div>
-            <div class="draft-pick"><span>2.04</span><strong>Example Player</strong><small>WR</small></div>
-            <div class="draft-pick"><span>2.03</span><strong>Example Player</strong><small>RB</small></div>
-            <div class="draft-pick"><span>2.02</span><strong>Example Player</strong><small>WR</small></div>
-            <div class="draft-pick"><span>2.01</span><strong>Example Player</strong><small>RB</small></div>
-        
-          </div>
+
+      <div class="draft-board-wrapper">
+
+        <div class="draft-board" id="draftBoard">
+          <!-- Full example draft board is generated below -->
         </div>
+
+      </div>
 
     </section>
 
   </main>
 
-    <footer class="site-footer">
-      <div class="footer-inner">
-    
-        <div class="footer-brand">
-          <strong>LEAGUE OF INCHES</strong>
-          <span>Fantasy Football Since 2022</span>
-        </div>
-    
-        <p>Built for the history, records, and bad decisions.</p>
-    
+
+  <footer class="site-footer">
+
+    <div class="footer-inner">
+
+      <div class="footer-brand">
+        <strong>LEAGUE OF INCHES</strong>
+        <span>Fantasy Football Since 2022</span>
       </div>
-    </footer>
-  
+
+      <p>Built for the history, records, and bad decisions.</p>
+
+    </div>
+
+  </footer>
+
+
+  <script>
+    const draftBoard = document.getElementById("draftBoard");
+
+    const managers = [
+      "Manager 1",
+      "Manager 2",
+      "Manager 3",
+      "Manager 4",
+      "Manager 5",
+      "Manager 6",
+      "Manager 7",
+      "Manager 8",
+      "Manager 9",
+      "Manager 10"
+    ];
+
+    const positions = [
+      "WR",
+      "RB",
+      "WR",
+      "RB",
+      "QB",
+      "WR",
+      "RB",
+      "TE",
+      "WR",
+      "RB"
+    ];
+
+
+    /* TOP LEFT CORNER */
+
+    const corner = document.createElement("div");
+    corner.className = "draft-corner";
+    corner.textContent = "RD";
+    draftBoard.appendChild(corner);
+
+
+    /* MANAGER HEADERS */
+
+    managers.forEach(manager => {
+      const header = document.createElement("div");
+
+      header.className = "draft-manager";
+      header.textContent = manager;
+
+      draftBoard.appendChild(header);
+    });
+
+
+    /* 15 ROUND EXAMPLE DRAFT */
+
+    for (let round = 1; round <= 15; round++) {
+
+      const roundLabel = document.createElement("div");
+
+      roundLabel.className = "draft-round";
+      roundLabel.textContent = round;
+
+      draftBoard.appendChild(roundLabel);
+
+
+      for (let team = 1; team <= 10; team++) {
+
+        const pick = document.createElement("div");
+        pick.className = "draft-pick";
+
+
+        const player = document.createElement("strong");
+        player.textContent = "Example Player";
+
+
+        const position = document.createElement("small");
+        position.textContent =
+          positions[(round + team - 2) % positions.length];
+
+
+        pick.appendChild(player);
+        pick.appendChild(position);
+
+        draftBoard.appendChild(pick);
+      }
+
+    }
+  </script>
+
 </body>
+
 </html>
