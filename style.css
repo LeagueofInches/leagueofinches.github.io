@@ -618,6 +618,43 @@ main p {
   font-weight: bold;
 }
 
+/* LEAGUE INFO */
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  padding: 45px 0;
+}
+
+.info-card {
+  background: linear-gradient(145deg, #111820, #151e27);
+  border: 1px solid #28313b;
+  border-radius: 12px;
+  padding: 28px;
+}
+
+.info-label {
+  margin: 0 0 10px;
+  color: #d4af37;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+}
+
+.info-card h3 {
+  margin: 0 0 12px;
+  color: #ffffff;
+  font-size: 1.5rem;
+}
+
+.info-card p {
+  margin: 0;
+  color: #aeb6bf;
+  line-height: 1.6;
+}
+
 /* MOBILE */
 
 @media (max-width: 800px) {
@@ -790,6 +827,15 @@ main p {
   }
 
   .news-card {
+    padding: 24px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+    padding: 35px 0;
+  }
+
+  .info-card {
     padding: 24px;
   }
   
