@@ -293,6 +293,76 @@ main p {
   font-size: 0.85rem;
 }
 
+/* CHAMPIONS */
+
+.champions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  padding: 45px 0;
+}
+
+.champion-card {
+  position: relative;
+  background: linear-gradient(145deg, #111820, #151e27);
+  border: 1px solid #28313b;
+  border-radius: 12px;
+  padding: 30px;
+  overflow: hidden;
+}
+
+.champion-card.featured-champion {
+  border-color: #d4af37;
+  box-shadow: 0 0 30px rgba(212, 175, 55, 0.08);
+}
+
+.champion-year {
+  display: inline-block;
+  color: #d4af37;
+  font-size: 0.85rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.champion-trophy {
+  margin: 22px 0 12px;
+  font-size: 3rem;
+}
+
+.champion-label {
+  margin: 0 0 5px;
+  color: #8f99a4;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.champion-card h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 2rem;
+}
+
+.champion-placements {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid #28313b;
+}
+
+.champion-placements p {
+  margin: 8px 0;
+  color: #b8c0c8;
+  font-size: 0.95rem;
+}
+
+.champion-placements span {
+  display: inline-block;
+  width: 45px;
+  color: #d4af37;
+  font-weight: bold;
+}
+
 /* MOBILE */
 
 @media (max-width: 800px) {
@@ -401,4 +471,18 @@ main p {
   .record-card h3 {
     font-size: 2.6rem;
   }
+
+    .champions-grid {
+    grid-template-columns: 1fr;
+    padding: 35px 0;
+  }
+
+  .champion-card {
+    padding: 25px;
+  }
+
+  .champion-card h3 {
+    font-size: 1.8rem;
+  }
+  
 }
