@@ -587,9 +587,8 @@ main p {
 
 .draft-board {
   display: grid;
-  grid-template-columns: 58px repeat(10, 125px);
-  width: max-content;
-  min-width: 100%;
+  grid-template-columns: 56px repeat(10, 108px);
+  width: 100%;
 }
 
 .draft-corner,
@@ -637,31 +636,28 @@ main p {
 }
 
 .draft-pick {
-  min-height: 95px;
-  padding: 12px 10px;
+  min-height: 72px;
+  padding: 10px 8px;
   background: var(--bg-card);
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 
 .draft-pick span {
-  color: var(--gold);
-  font-size: 0.7rem;
-  font-weight: bold;
-  margin-bottom: 7px;
+  display: none;
 }
 
 .draft-pick strong {
   color: var(--text-main);
-  font-size: 0.85rem;
-  line-height: 1.25;
+  font-size: 0.8rem;
+  line-height: 1.2;
 }
 
 .draft-pick small {
-  margin-top: auto;
-  padding-top: 8px;
+  margin-top: 6px;
   color: var(--text-muted);
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: bold;
 }
 
