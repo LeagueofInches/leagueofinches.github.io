@@ -561,6 +561,63 @@ main p {
   background: #18222c;
 }
 
+/* LEAGUE NEWS */
+
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  padding: 45px 0;
+}
+
+.news-card {
+  background: linear-gradient(145deg, #111820, #151e27);
+  border: 1px solid #28313b;
+  border-radius: 12px;
+  padding: 28px;
+}
+
+.news-card.featured-news {
+  grid-column: 1 / -1;
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-color: #d4af37;
+}
+
+.news-category {
+  margin: 0 0 12px;
+  color: #d4af37;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+}
+
+.news-card h3 {
+  margin: 0 0 12px;
+  color: #ffffff;
+  font-size: 1.8rem;
+}
+
+.featured-news h3 {
+  font-size: 2.5rem;
+}
+
+.news-card p {
+  margin: 0 0 20px;
+  color: #aeb6bf;
+  line-height: 1.6;
+}
+
+.news-date {
+  margin-top: auto;
+  color: #7f8a96;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
 /* MOBILE */
 
 @media (max-width: 800px) {
@@ -716,6 +773,24 @@ main p {
 
   .draft-manager {
     padding: 12px 6px;
+  }
+
+  .news-grid {
+    grid-template-columns: 1fr;
+    padding: 35px 0;
+  }
+
+  .news-card.featured-news {
+    grid-column: auto;
+    min-height: 230px;
+  }
+
+  .featured-news h3 {
+    font-size: 2rem;
+  }
+
+  .news-card {
+    padding: 24px;
   }
   
 }
