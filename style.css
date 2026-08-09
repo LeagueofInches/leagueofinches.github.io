@@ -237,6 +237,62 @@ main p {
   color: #ffffff;
 }
 
+/* RECORD BOOK */
+
+.record-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  padding: 45px 0;
+}
+
+.record-card {
+  background: linear-gradient(145deg, #111820, #151e27);
+  border: 1px solid #28313b;
+  border-radius: 10px;
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.record-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  background: #d4af37;
+}
+
+.record-label {
+  margin: 0 0 18px;
+  color: #aeb6bf;
+  font-size: 0.78rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1.3px;
+}
+
+.record-card h3 {
+  margin: 0;
+  font-size: 3rem;
+  line-height: 1;
+  color: #ffffff;
+}
+
+.record-holder {
+  margin: 12px 0 4px;
+  color: #d4af37;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.record-meta {
+  color: #7f8a96;
+  font-size: 0.85rem;
+}
+
 /* MOBILE */
 
 @media (max-width: 800px) {
@@ -331,5 +387,18 @@ main p {
   .standings-table th,
   .standings-table td {
     padding: 14px 15px;
+  }
+
+    .record-grid {
+    grid-template-columns: 1fr;
+    padding: 35px 0;
+  }
+
+  .record-card {
+    padding: 24px;
+  }
+
+  .record-card h3 {
+    font-size: 2.6rem;
   }
 }
