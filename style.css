@@ -386,6 +386,87 @@ main p {
   text-align: right;
 }
 
+/* DRAFT HISTORY */
+
+.draft-section {
+  padding: 45px 0;
+}
+
+.draft-info {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.draft-info div {
+  background: #111820;
+  border: 1px solid #28313b;
+  border-radius: 8px;
+  padding: 18px;
+}
+
+.draft-info span {
+  display: block;
+  margin-bottom: 6px;
+  color: #8f99a4;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.draft-info strong {
+  color: #ffffff;
+  font-size: 1.2rem;
+}
+
+.draft-table {
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
+  background: #111820;
+}
+
+.draft-table th,
+.draft-table td {
+  padding: 16px 18px;
+  text-align: left;
+  border-bottom: 1px solid #242d36;
+}
+
+.draft-table th {
+  background: #151e27;
+  color: #d4af37;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.draft-table td {
+  color: #d6d9dd;
+}
+
+.draft-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.draft-table tbody tr:hover {
+  background: #151e27;
+}
+
+.draft-table td:nth-child(1),
+.draft-table td:nth-child(5) {
+  color: #d4af37;
+  font-weight: bold;
+}
+
+.draft-table td:nth-child(2),
+.draft-table td:nth-child(3) {
+  color: #ffffff;
+  font-weight: bold;
+}
+
 /* MOBILE */
 
 @media (max-width: 800px) {
@@ -506,6 +587,28 @@ main p {
 
   .champion-card h3 {
     font-size: 1.8rem;
+  }
+
+    .draft-section {
+    padding: 35px 0;
+  }
+
+  .draft-info {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+
+  .draft-info div {
+    padding: 14px 10px;
+  }
+
+  .draft-info strong {
+    font-size: 1rem;
+  }
+
+  .draft-table th,
+  .draft-table td {
+    padding: 14px 15px;
   }
   
 }
