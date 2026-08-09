@@ -356,7 +356,7 @@ main p {
   font-size: 0.95rem;
 }
 
-.champion-placements span {
+.champion-placements p span {
   display: inline-block;
   width: 45px;
   color: #d4af37;
