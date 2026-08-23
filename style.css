@@ -415,6 +415,34 @@ main p {
   color: var(--text-main);
 }
 
+/* SORTABLE STANDINGS */
+
+.sort-button {
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  text-align: left;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.sort-button:hover {
+  color: var(--gold-light);
+}
+
+.sort-arrow {
+  display: inline-block;
+  min-width: 11px;
+  margin-left: 4px;
+  color: var(--gold-light);
+}
+
 
 /* ==============================================================================================================================================================================================
    RECORD BOOK
