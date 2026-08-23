@@ -90,7 +90,13 @@
                   Manager <span class="sort-arrow"></span>
                 </button>
               </th>
-
+              
+              <th id="seasonsPlayedHeader" style="display: none;">
+                <button class="sort-button" data-sort="seasonsPlayed">
+                  Seasons <span class="sort-arrow"></span>
+                </button>
+              </th>
+              
               <th>
                 <button class="sort-button" data-sort="wins">
                   W <span class="sort-arrow"></span>
@@ -507,6 +513,7 @@
 
         managers[row.manager] = {
           manager: row.manager,
+          seasonsPlayed: 0,
           wins: 0,
           losses: 0,
           ties: 0,
@@ -517,6 +524,7 @@
 
       }
 
+      managers[row.manager].seasonsPlayed += 1;
 
       managers[row.manager].wins +=
         row.wins;
@@ -587,6 +595,12 @@
 
 
   function renderStandings(season) {
+
+    const seasonsPlayedHeader =
+      document.getElementById("seasonsPlayedHeader");
+    
+    seasonsPlayedHeader.style.display =
+      season === "all-time" ? "" : "none";
 
     let seasonData;
 
@@ -687,24 +701,26 @@
         );
 
 
-      tr.innerHTML = `
-        <td>${row.rank}</td>
-
-        <td>
-          <div class="manager-cell">
-
-            <span class="manager-name">
-              ${row.manager}
-            </span>
-
-            <span class="manager-badges">
-              ${badges}
-            </span>
-
-          </div>
-        </td>
-
-        <td>${row.wins}</td>
+      <td>
+        <div class="manager-cell">
+      
+          <span class="manager-name">
+            ${row.manager}
+          </span>
+      
+          <span class="manager-badges">
+            ${badges}
+          </span>
+      
+        </div>
+      </td>
+      
+      ${season === "all-time"
+        ? `<td>${row.seasonsPlayed}</td>`
+        : ""
+      }
+      
+      <td>${row.wins}</td>
         <td>${row.losses}</td>
         <td>${row.ties}</td>
 
