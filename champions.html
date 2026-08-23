@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,15 +10,28 @@
 
 <body>
 
-     <header class="site-header">
-      <div class="header-inner">
-    
-        <a href="index.html" class="site-brand">
-          <h1>LEAGUE OF INCHES</h1>
-          <span>Fantasy Football</span>
-        </a>
-    
-        <nav class="main-nav desktop-nav">
+  <header class="site-header">
+    <div class="header-inner">
+
+      <a href="index.html" class="site-brand">
+        <h1>LEAGUE OF INCHES</h1>
+        <span>Fantasy Football</span>
+      </a>
+
+      <nav class="main-nav desktop-nav">
+        <a href="index.html">Home</a>
+        <a href="standings.html">Standings</a>
+        <a href="record-book.html">Record Book</a>
+        <a href="champions.html">Champions</a>
+        <a href="draft-history.html">Draft History</a>
+        <a href="news.html">League News</a>
+        <a href="league-info.html">League Info</a>
+      </nav>
+
+      <details class="mobile-nav">
+        <summary>☰</summary>
+
+        <div class="mobile-nav-links">
           <a href="index.html">Home</a>
           <a href="standings.html">Standings</a>
           <a href="record-book.html">Record Book</a>
@@ -25,120 +39,343 @@
           <a href="draft-history.html">Draft History</a>
           <a href="news.html">League News</a>
           <a href="league-info.html">League Info</a>
-        </nav>
-    
-        <details class="mobile-nav">
-          <summary>☰</summary>
-    
-          <div class="mobile-nav-links">
-            <a href="index.html">Home</a>
-            <a href="standings.html">Standings</a>
-            <a href="record-book.html">Record Book</a>
-            <a href="champions.html">Champions</a>
-            <a href="draft-history.html">Draft History</a>
-            <a href="news.html">League News</a>
-            <a href="league-info.html">League Info</a>
-          </div>
-        </details>
-    
-      </div>
-    </header>
+        </div>
+      </details>
+
+    </div>
+  </header>
+
+
   <main>
 
     <section class="page-header">
       <p class="eyebrow">Hall of Champions</p>
       <h2>League Champions</h2>
+
       <p class="page-description">
         Every champion, runner-up, and podium finish in League of Inches history.
       </p>
     </section>
 
-    <section class="champions-grid">
 
-      <article class="champion-card featured-champion">
-        <span class="champion-year">2025</span>
-        <div class="champion-trophy">🏆</div>
-        <p class="champion-label">League Champion</p>
-        <h3>Cody Mocilan</h3>
-
-        <div class="champion-placements">
-          <p><span>2nd</span> Example Manager</p>
-          <p><span>3rd</span> Example Manager</p>
-        
-          <div class="scoring-leader">
-            <span class="scoring-label">Scoring Leader</span>
-            <strong>Example Manager</strong>
-          </div>
-        </div>
-      </article>
+    <section class="champions-grid" id="championsGrid">
 
       <article class="champion-card">
-        <span class="champion-year">2024</span>
-        <div class="champion-trophy">🏆</div>
-        <p class="champion-label">League Champion</p>
-        <h3>Example Manager</h3>
-
-        <div class="champion-placements">
-          <p><span>2nd</span> Example Manager</p>
-          <p><span>3rd</span> Example Manager</p>
-        
-          <div class="scoring-leader">
-            <span class="scoring-label">Scoring Leader</span>
-            <strong>Example Manager</strong>
-          </div>
-        </div>
-      </article>
-
-      <article class="champion-card">
-        <span class="champion-year">2023</span>
-        <div class="champion-trophy">🏆</div>
-        <p class="champion-label">League Champion</p>
-        <h3>Example Manager</h3>
-
-        <div class="champion-placements">
-          <p><span>2nd</span> Example Manager</p>
-          <p><span>3rd</span> Example Manager</p>
-        
-          <div class="scoring-leader">
-            <span class="scoring-label">Scoring Leader</span>
-            <strong>Example Manager</strong>
-          </div>
-        </div>
-      </article>
-
-      <article class="champion-card">
-        <span class="champion-year">2022</span>
-        <div class="champion-trophy">🏆</div>
-        <p class="champion-label">League Champion</p>
-        <h3>Example Manager</h3>
-
-        <div class="champion-placements">
-          <p><span>2nd</span> Example Manager</p>
-          <p><span>3rd</span> Example Manager</p>
-        
-          <div class="scoring-leader">
-            <span class="scoring-label">Scoring Leader</span>
-            <strong>Example Manager</strong>
-          </div>
-        </div>
+        <p>Loading champions...</p>
       </article>
 
     </section>
 
   </main>
 
-    <footer class="site-footer">
-      <div class="footer-inner">
-    
-        <div class="footer-brand">
-          <strong>LEAGUE OF INCHES</strong>
-          <span>Fantasy Football Since 2022</span>
-        </div>
-    
-        <p>Built for the history, records, and bad decisions.</p>
-    
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+
+      <div class="footer-brand">
+        <strong>LEAGUE OF INCHES</strong>
+        <span>Fantasy Football Since 2022</span>
       </div>
-    </footer>
-  
+
+      <p>Built for the history, records, and bad decisions.</p>
+
+    </div>
+  </footer>
+
+
+  <script>
+
+    const championsCsvUrl =
+      "https://docs.google.com/spreadsheets/d/e/2PACX-1vRSITMjap0Q_P0zNyA2rcKENfWgDXdniz59mCXW-wm8pwgzMSNFcR_bJD4pZ00-SyifWOXm8g_CKNQC/pub?gid=268819829&single=true&output=csv";
+
+
+    const championsGrid =
+      document.getElementById("championsGrid");
+
+
+    function parseCSV(text) {
+
+      const rows = [];
+
+      let row = [];
+      let value = "";
+      let insideQuotes = false;
+
+
+      for (let i = 0; i < text.length; i++) {
+
+        const char = text[i];
+        const next = text[i + 1];
+
+
+        if (char === '"' && insideQuotes && next === '"') {
+
+          value += '"';
+          i++;
+
+        }
+
+        else if (char === '"') {
+
+          insideQuotes = !insideQuotes;
+
+        }
+
+        else if (char === "," && !insideQuotes) {
+
+          row.push(value);
+          value = "";
+
+        }
+
+        else if (
+          (char === "\n" || char === "\r") &&
+          !insideQuotes
+        ) {
+
+          if (char === "\r" && next === "\n") {
+            i++;
+          }
+
+          row.push(value);
+
+          if (row.some(cell => cell.trim() !== "")) {
+            rows.push(row);
+          }
+
+          row = [];
+          value = "";
+
+        }
+
+        else {
+
+          value += char;
+
+        }
+
+      }
+
+
+      if (value || row.length) {
+
+        row.push(value);
+        rows.push(row);
+
+      }
+
+
+      return rows;
+
+    }
+
+
+    function createChampionCard(season, isNewestSeason) {
+
+      const card =
+        document.createElement("article");
+
+
+      card.className =
+        isNewestSeason
+          ? "champion-card featured-champion"
+          : "champion-card";
+
+
+      const hasCoChampion =
+        season.coChampion !== "";
+
+
+      const championLabel =
+        hasCoChampion
+          ? "League Co-Champions"
+          : "League Champion";
+
+
+      const championNames =
+        hasCoChampion
+          ? `${season.champion} & ${season.coChampion}`
+          : season.champion;
+
+
+      let placementsHtml = "";
+
+
+      if (season.runnerUp) {
+
+        placementsHtml += `
+          <p>
+            <span>2nd</span>
+            ${season.runnerUp}
+          </p>
+        `;
+
+      }
+
+
+      if (season.thirdPlace) {
+
+        placementsHtml += `
+          <p>
+            <span>3rd</span>
+            ${season.thirdPlace}
+          </p>
+        `;
+
+      }
+
+
+      card.innerHTML = `
+
+        <span class="champion-year">
+          ${season.season}
+        </span>
+
+        <div class="champion-trophy">
+          🏆
+        </div>
+
+        <p class="champion-label">
+          ${championLabel}
+        </p>
+
+        <h3>
+          ${championNames}
+        </h3>
+
+        <div class="champion-placements">
+
+          ${placementsHtml}
+
+          <div class="scoring-leader">
+            <span class="scoring-label">
+              Scoring Leader
+            </span>
+
+            <strong>
+              ${season.scoringLeader}
+            </strong>
+          </div>
+
+        </div>
+
+      `;
+
+
+      return card;
+
+    }
+
+
+    async function loadChampions() {
+
+      try {
+
+        const response =
+          await fetch(championsCsvUrl);
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            "Could not load champions."
+          );
+
+        }
+
+
+        const csvText =
+          await response.text();
+
+
+        const rows =
+          parseCSV(csvText);
+
+
+        rows.shift();
+
+
+        const championsData =
+          rows
+            .map(row => ({
+
+              season:
+                row[0]?.trim() || "",
+
+              champion:
+                row[1]?.trim() || "",
+
+              coChampion:
+                row[2]?.trim() || "",
+
+              runnerUp:
+                row[3]?.trim() || "",
+
+              thirdPlace:
+                row[4]?.trim() || "",
+
+              scoringLeader:
+                row[5]?.trim() || "",
+
+              notes:
+                row[6]?.trim() || ""
+
+            }))
+            .filter(row =>
+              row.season !== ""
+            )
+            .sort(
+              (a, b) =>
+                Number(b.season) -
+                Number(a.season)
+            );
+
+
+        championsGrid.innerHTML = "";
+
+
+        championsData.forEach(
+          (season, index) => {
+
+            const card =
+              createChampionCard(
+                season,
+                index === 0
+              );
+
+
+            championsGrid.appendChild(card);
+
+          }
+        );
+
+
+      }
+
+      catch (error) {
+
+        console.error(error);
+
+
+        championsGrid.innerHTML = `
+
+          <article class="champion-card">
+            <p>
+              Unable to load champions.
+            </p>
+          </article>
+
+        `;
+
+      }
+
+    }
+
+
+    loadChampions();
+
+  </script>
+
 </body>
+
 </html>
