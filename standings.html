@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,12 +12,12 @@
 
   <header class="site-header">
     <div class="header-inner">
-  
+
       <a href="index.html" class="site-brand">
         <h1>LEAGUE OF INCHES</h1>
         <span>Fantasy Football</span>
       </a>
-  
+
       <nav class="main-nav desktop-nav">
         <a href="index.html">Home</a>
         <a href="standings.html">Standings</a>
@@ -26,10 +27,10 @@
         <a href="news.html">League News</a>
         <a href="league-info.html">League Info</a>
       </nav>
-  
+
       <details class="mobile-nav">
         <summary>☰</summary>
-  
+
         <div class="mobile-nav-links">
           <a href="index.html">Home</a>
           <a href="standings.html">Standings</a>
@@ -40,241 +41,633 @@
           <a href="league-info.html">League Info</a>
         </div>
       </details>
-  
+
     </div>
   </header>
-  
+
+
   <main>
 
     <section class="page-header">
       <p class="eyebrow">League History</p>
       <h2>Standings</h2>
+
       <p class="page-description">
         Current and historical standings from every season of the League of Inches.
       </p>
     </section>
 
+
     <section class="standings-section">
 
-  <div class="section-heading">
-    <div>
-      <p class="eyebrow">League Standings</p>
-      <h3 id="standingsTitle">Season Standings</h3>
-    </div>
+      <div class="section-heading">
 
-    <select class="season-selector" id="seasonSelector"></select>
-  </div>
+        <div>
+          <p class="eyebrow">League Standings</p>
+          <h3 id="standingsTitle">Season Standings</h3>
+        </div>
 
-  <div class="table-wrapper">
-    <table class="standings-table">
-      <thead>
-        <tr>
-          <th>RK</th>
-          <th>Manager</th>
-          <th>W</th>
-          <th>L</th>
-          <th>T</th>
-          <th>WIN%</th>
-          <th>PF</th>
-          <th>PA</th>
-          <th>+/-</th>
-          <th>Moves</th>
-        </tr>
-      </thead>
+        <select class="season-selector" id="seasonSelector"></select>
 
-      <tbody id="standingsBody"></tbody>
-    </table>
-  </div>
+      </div>
 
-</section>
+
+      <div class="table-wrapper">
+
+        <table class="standings-table">
+
+          <thead>
+            <tr>
+
+              <th>
+                <button class="sort-button" data-sort="rank">
+                  RK <span class="sort-arrow"></span>
+                </button>
+              </th>
+
+              <th>
+                <button class="sort-button" data-sort="manager">
+                  Manager <span class="sort-arrow"></span>
+                </button>
+              </th>
+
+              <th>
+                <button class="sort-button" data-sort="wins">
+                  W <span class="sort-arrow"></span>
+                </button>
+              </th>
+
+              <th>
+                <button class="sort-button" data-sort="losses">
+                  L <span class="sort-arrow"></span>
+                </button>
+              </th>
+
+              <th>
+                <button class="sort-button" data-sort="ties">
+                  T <span class="sort-arrow"></span>
+                </button>
+              </th>
+
+              <th>
+                <button class="sort-button" data-sort="winPct">
+                  WIN% <span class="sort-arrow"></span>
+                </button>
+              </th>
+
+              <th>
+                <button class="sort-button" data-sort="pointsFor">
+                  PF <span class="sort-arrow"></span>
+                </button>
+              </th>
+
+              <th>
+                <button class="sort-button" data-sort="pointsAgainst">
+                  PA <span class="sort-arrow"></span>
+                </button>
+              </th>
+
+              <th>
+                <button class="sort-button" data-sort="difference">
+                  +/- <span class="sort-arrow"></span>
+                </button>
+              </th>
+
+              <th>
+                <button class="sort-button" data-sort="moves">
+                  Moves <span class="sort-arrow"></span>
+                </button>
+              </th>
+
+            </tr>
+          </thead>
+
+          <tbody id="standingsBody"></tbody>
+
+        </table>
+
+      </div>
+
+    </section>
 
   </main>
 
-    <footer class="site-footer">
-      <div class="footer-inner">
-    
-        <div class="footer-brand">
-          <strong>LEAGUE OF INCHES</strong>
-          <span>Fantasy Football Since 2022</span>
-        </div>
-    
-        <p>Built for the history, records, and bad decisions.</p>
-    
-      </div>
-    </footer>
 
-      <script>
-      const standingsCsvUrl =
-        "https://docs.google.com/spreadsheets/d/e/2PACX-1vRSITMjap0Q_P0zNyA2rcKENfWgDXdniz59mCXW-wm8pwgzMSNFcR_bJD4pZ00-SyifWOXm8g_CKNQC/pub?gid=0&single=true&output=csv";
-    
-      const seasonSelector = document.getElementById("seasonSelector");
-      const standingsBody = document.getElementById("standingsBody");
-      const standingsTitle = document.getElementById("standingsTitle");
-    
-      let standingsData = [];
-    
-    
-      function parseCSV(text) {
-        const rows = [];
-        let row = [];
-        let value = "";
-        let insideQuotes = false;
-    
-        for (let i = 0; i < text.length; i++) {
-          const char = text[i];
-          const next = text[i + 1];
-    
-          if (char === '"' && insideQuotes && next === '"') {
-            value += '"';
-            i++;
-          } else if (char === '"') {
-            insideQuotes = !insideQuotes;
-          } else if (char === "," && !insideQuotes) {
-            row.push(value);
-            value = "";
-          } else if ((char === "\n" || char === "\r") && !insideQuotes) {
-            if (char === "\r" && next === "\n") {
-              i++;
-            }
-    
-            row.push(value);
-    
-            if (row.some(cell => cell.trim() !== "")) {
-              rows.push(row);
-            }
-    
-            row = [];
-            value = "";
-          } else {
-            value += char;
-          }
+  <footer class="site-footer">
+
+    <div class="footer-inner">
+
+      <div class="footer-brand">
+        <strong>LEAGUE OF INCHES</strong>
+        <span>Fantasy Football Since 2022</span>
+      </div>
+
+      <p>Built for the history, records, and bad decisions.</p>
+
+    </div>
+
+  </footer>
+
+
+  <script>
+
+    const standingsCsvUrl =
+      "https://docs.google.com/spreadsheets/d/e/2PACX-1vRSITMjap0Q_P0zNyA2rcKENfWgDXdniz59mCXW-wm8pwgzMSNFcR_bJD4pZ00-SyifWOXm8g_CKNQC/pub?gid=0&single=true&output=csv";
+
+
+    const seasonSelector =
+      document.getElementById("seasonSelector");
+
+    const standingsBody =
+      document.getElementById("standingsBody");
+
+    const standingsTitle =
+      document.getElementById("standingsTitle");
+
+    const sortButtons =
+      document.querySelectorAll(".sort-button");
+
+
+    let standingsData = [];
+
+    let sortState = {
+      key: "rank",
+      direction: "asc"
+    };
+
+
+    function parseCSV(text) {
+
+      const rows = [];
+
+      let row = [];
+      let value = "";
+      let insideQuotes = false;
+
+
+      for (let i = 0; i < text.length; i++) {
+
+        const char = text[i];
+        const next = text[i + 1];
+
+
+        if (char === '"' && insideQuotes && next === '"') {
+
+          value += '"';
+          i++;
+
         }
-    
-        if (value || row.length) {
+
+        else if (char === '"') {
+
+          insideQuotes = !insideQuotes;
+
+        }
+
+        else if (char === "," && !insideQuotes) {
+
           row.push(value);
-          rows.push(row);
+          value = "";
+
         }
-    
-        return rows;
-      }
-    
-    
-      function formatWinPercentage(wins, losses, ties) {
-        const games = wins + losses + ties;
-    
-        if (games === 0) {
-          return ".000";
-        }
-    
-        const percentage = (wins + ties * 0.5) / games;
-    
-        return percentage.toFixed(3).replace(/^0/, "");
-      }
-    
-    
-      function formatDifference(pointsFor, pointsAgainst) {
-        const difference = pointsFor - pointsAgainst;
-    
-        if (difference > 0) {
-          return `+${difference.toFixed(2)}`;
-        }
-    
-        return difference.toFixed(2);
-      }
-    
-    
-      function renderStandings(season) {
-        const seasonData = standingsData
-          .filter(row => row.season === season)
-          .sort((a, b) => a.rank - b.rank);
-    
-        standingsTitle.textContent = `${season} Standings`;
-        standingsBody.innerHTML = "";
-    
-        seasonData.forEach(row => {
-          const tr = document.createElement("tr");
-    
-          tr.innerHTML = `
-            <td>${row.rank}</td>
-            <td>${row.manager}</td>
-            <td>${row.wins}</td>
-            <td>${row.losses}</td>
-            <td>${row.ties}</td>
-            <td>${formatWinPercentage(row.wins, row.losses, row.ties)}</td>
-            <td>${row.pointsFor.toFixed(2)}</td>
-            <td>${row.pointsAgainst.toFixed(2)}</td>
-            <td>${formatDifference(row.pointsFor, row.pointsAgainst)}</td>
-            <td>${row.moves}</td>
-          `;
-    
-          standingsBody.appendChild(tr);
-        });
-      }
-    
-    
-      async function loadStandings() {
-        try {
-          const response = await fetch(standingsCsvUrl);
-    
-          if (!response.ok) {
-            throw new Error("Could not load standings.");
+
+        else if (
+          (char === "\n" || char === "\r") &&
+          !insideQuotes
+        ) {
+
+          if (char === "\r" && next === "\n") {
+            i++;
           }
-    
-          const csvText = await response.text();
-          const rows = parseCSV(csvText);
-    
-          rows.shift();
-    
-          standingsData = rows.map(row => ({
-            season: row[0].trim(),
-            rank: Number(row[1]),
-            manager: row[2].trim(),
-            wins: Number(row[3]),
-            losses: Number(row[4]),
-            ties: Number(row[5]),
-            pointsFor: Number(row[6]),
-            pointsAgainst: Number(row[7]),
-            moves: Number(row[8])
-          }));
-    
-          const seasons = [...new Set(
-            standingsData.map(row => row.season)
-          )].sort((a, b) => Number(b) - Number(a));
-    
-          seasonSelector.innerHTML = "";
-    
-          seasons.forEach(season => {
-            const option = document.createElement("option");
-    
-            option.value = season;
-            option.textContent = season;
-    
-            seasonSelector.appendChild(option);
-          });
-    
-          renderStandings(seasons[0]);
-    
-        } catch (error) {
-          console.error(error);
-    
-          standingsBody.innerHTML = `
-            <tr>
-              <td colspan="10">
-                Unable to load standings.
-              </td>
-            </tr>
-          `;
+
+          row.push(value);
+
+          if (row.some(cell => cell.trim() !== "")) {
+            rows.push(row);
+          }
+
+          row = [];
+          value = "";
+
         }
+
+        else {
+
+          value += char;
+
+        }
+
       }
-    
-    
-      seasonSelector.addEventListener("change", () => {
-        renderStandings(seasonSelector.value);
+
+
+      if (value || row.length) {
+
+        row.push(value);
+        rows.push(row);
+
+      }
+
+
+      return rows;
+    }
+
+
+    function calculateWinPercentage(row) {
+
+      const games =
+        row.wins +
+        row.losses +
+        row.ties;
+
+
+      if (games === 0) {
+        return 0;
+      }
+
+
+      return (
+        row.wins +
+        row.ties * 0.5
+      ) / games;
+    }
+
+
+    function formatWinPercentage(row) {
+
+      return calculateWinPercentage(row)
+        .toFixed(3)
+        .replace(/^0/, "");
+
+    }
+
+
+    function calculateDifference(row) {
+
+      return row.pointsFor - row.pointsAgainst;
+
+    }
+
+
+    function formatDifference(row) {
+
+      const difference =
+        calculateDifference(row);
+
+
+      if (difference > 0) {
+
+        return `+${difference.toFixed(2)}`;
+
+      }
+
+
+      return difference.toFixed(2);
+
+    }
+
+
+    function getSortValue(row, key) {
+
+      if (key === "winPct") {
+
+        return calculateWinPercentage(row);
+
+      }
+
+
+      if (key === "difference") {
+
+        return calculateDifference(row);
+
+      }
+
+
+      return row[key];
+
+    }
+
+
+    function getDefaultDirection(key) {
+
+      if (
+        key === "rank" ||
+        key === "manager"
+      ) {
+
+        return "asc";
+
+      }
+
+
+      return "desc";
+
+    }
+
+
+    function updateSortArrows() {
+
+      sortButtons.forEach(button => {
+
+        const arrow =
+          button.querySelector(".sort-arrow");
+
+
+        if (
+          button.dataset.sort ===
+          sortState.key
+        ) {
+
+          arrow.textContent =
+            sortState.direction === "asc"
+              ? "▲"
+              : "▼";
+
+        }
+
+        else {
+
+          arrow.textContent = "";
+
+        }
+
       });
-    
-    
-      loadStandings();
-    </script>
-  
+
+    }
+
+
+    function renderStandings(season) {
+
+      const seasonData =
+        standingsData
+          .filter(row =>
+            row.season === season
+          )
+          .sort((a, b) => {
+
+            const aValue =
+              getSortValue(
+                a,
+                sortState.key
+              );
+
+            const bValue =
+              getSortValue(
+                b,
+                sortState.key
+              );
+
+
+            let comparison;
+
+
+            if (
+              typeof aValue === "string"
+            ) {
+
+              comparison =
+                aValue.localeCompare(
+                  bValue
+                );
+
+            }
+
+            else {
+
+              comparison =
+                aValue - bValue;
+
+            }
+
+
+            if (comparison === 0) {
+
+              comparison =
+                a.rank - b.rank;
+
+            }
+
+
+            return (
+              sortState.direction === "asc"
+                ? comparison
+                : -comparison
+            );
+
+          });
+
+
+      standingsTitle.textContent =
+        `${season} Standings`;
+
+      standingsBody.innerHTML = "";
+
+
+      seasonData.forEach(row => {
+
+        const tr =
+          document.createElement("tr");
+
+
+        tr.innerHTML = `
+          <td>${row.rank}</td>
+          <td>${row.manager}</td>
+          <td>${row.wins}</td>
+          <td>${row.losses}</td>
+          <td>${row.ties}</td>
+          <td>${formatWinPercentage(row)}</td>
+          <td>${row.pointsFor.toFixed(2)}</td>
+          <td>${row.pointsAgainst.toFixed(2)}</td>
+          <td>${formatDifference(row)}</td>
+          <td>${row.moves}</td>
+        `;
+
+
+        standingsBody.appendChild(tr);
+
+      });
+
+
+      updateSortArrows();
+
+    }
+
+
+    async function loadStandings() {
+
+      try {
+
+        const response =
+          await fetch(
+            standingsCsvUrl
+          );
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            "Could not load standings."
+          );
+
+        }
+
+
+        const csvText =
+          await response.text();
+
+
+        const rows =
+          parseCSV(csvText);
+
+
+        rows.shift();
+
+
+        standingsData =
+          rows.map(row => ({
+
+            season:
+              row[0].trim(),
+
+            rank:
+              Number(row[1]),
+
+            manager:
+              row[2].trim(),
+
+            wins:
+              Number(row[3]),
+
+            losses:
+              Number(row[4]),
+
+            ties:
+              Number(row[5]),
+
+            pointsFor:
+              Number(row[6]),
+
+            pointsAgainst:
+              Number(row[7]),
+
+            moves:
+              Number(row[8])
+
+          }));
+
+
+        const seasons = [
+          ...new Set(
+            standingsData.map(
+              row => row.season
+            )
+          )
+        ].sort(
+          (a, b) =>
+            Number(b) - Number(a)
+        );
+
+
+        seasonSelector.innerHTML = "";
+
+
+        seasons.forEach(season => {
+
+          const option =
+            document.createElement(
+              "option"
+            );
+
+
+          option.value = season;
+          option.textContent = season;
+
+
+          seasonSelector.appendChild(
+            option
+          );
+
+        });
+
+
+        renderStandings(seasons[0]);
+
+      }
+
+      catch (error) {
+
+        console.error(error);
+
+
+        standingsBody.innerHTML = `
+          <tr>
+            <td colspan="10">
+              Unable to load standings.
+            </td>
+          </tr>
+        `;
+
+      }
+
+    }
+
+
+    sortButtons.forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          const key =
+            button.dataset.sort;
+
+
+          if (
+            sortState.key === key
+          ) {
+
+            sortState.direction =
+              sortState.direction === "asc"
+                ? "desc"
+                : "asc";
+
+          }
+
+          else {
+
+            sortState.key = key;
+
+            sortState.direction =
+              getDefaultDirection(key);
+
+          }
+
+
+          renderStandings(
+            seasonSelector.value
+          );
+
+        }
+      );
+
+    });
+
+
+    seasonSelector.addEventListener(
+      "change",
+      () => {
+
+        renderStandings(
+          seasonSelector.value
+        );
+
+      }
+    );
+
+
+    loadStandings();
+
+  </script>
+
 </body>
+
 </html>
