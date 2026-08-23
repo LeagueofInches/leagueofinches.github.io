@@ -374,7 +374,7 @@ main p {
 .standings-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 700px;
+  min-width: 950px;
   background: var(--bg-card);
 }
 
