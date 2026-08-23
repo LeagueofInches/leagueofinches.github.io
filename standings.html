@@ -90,13 +90,13 @@
                   Manager <span class="sort-arrow"></span>
                 </button>
               </th>
-              
+
               <th id="seasonsPlayedHeader" style="display: none;">
                 <button class="sort-button" data-sort="seasonsPlayed">
                   Seasons <span class="sort-arrow"></span>
                 </button>
               </th>
-              
+
               <th>
                 <button class="sort-button" data-sort="wins">
                   W <span class="sort-arrow"></span>
@@ -175,809 +175,883 @@
   </footer>
 
 
-    <script>
+  <script>
 
-  const standingsCsvUrl =
-    "https://docs.google.com/spreadsheets/d/e/2PACX-1vRSITMjap0Q_P0zNyA2rcKENfWgDXdniz59mCXW-wm8pwgzMSNFcR_bJD4pZ00-SyifWOXm8g_CKNQC/pub?gid=0&single=true&output=csv";
+    const standingsCsvUrl =
+      "https://docs.google.com/spreadsheets/d/e/2PACX-1vRSITMjap0Q_P0zNyA2rcKENfWgDXdniz59mCXW-wm8pwgzMSNFcR_bJD4pZ00-SyifWOXm8g_CKNQC/pub?gid=0&single=true&output=csv";
 
-  const championsCsvUrl =
-    "https://docs.google.com/spreadsheets/d/e/2PACX-1vRSITMjap0Q_P0zNyA2rcKENfWgDXdniz59mCXW-wm8pwgzMSNFcR_bJD4pZ00-SyifWOXm8g_CKNQC/pub?gid=268819829&single=true&output=csv";
+    const championsCsvUrl =
+      "https://docs.google.com/spreadsheets/d/e/2PACX-1vRSITMjap0Q_P0zNyA2rcKENfWgDXdniz59mCXW-wm8pwgzMSNFcR_bJD4pZ00-SyifWOXm8g_CKNQC/pub?gid=268819829&single=true&output=csv";
 
 
-  const seasonSelector =
-    document.getElementById("seasonSelector");
+    const seasonSelector =
+      document.getElementById("seasonSelector");
 
-  const standingsBody =
-    document.getElementById("standingsBody");
+    const standingsBody =
+      document.getElementById("standingsBody");
 
-  const standingsTitle =
-    document.getElementById("standingsTitle");
-
-  const sortButtons =
-    document.querySelectorAll(".sort-button");
-
-
-  let standingsData = [];
-  let championsData = [];
-
-
-  let sortState = {
-    key: "rank",
-    direction: "asc"
-  };
-
-
-  function parseCSV(text) {
-
-    const rows = [];
-
-    let row = [];
-    let value = "";
-    let insideQuotes = false;
-
-
-    for (let i = 0; i < text.length; i++) {
-
-      const char = text[i];
-      const next = text[i + 1];
-
-
-      if (char === '"' && insideQuotes && next === '"') {
-
-        value += '"';
-        i++;
-
-      }
-
-      else if (char === '"') {
-
-        insideQuotes = !insideQuotes;
-
-      }
-
-      else if (char === "," && !insideQuotes) {
-
-        row.push(value);
-        value = "";
-
-      }
-
-      else if (
-        (char === "\n" || char === "\r") &&
-        !insideQuotes
-      ) {
-
-        if (char === "\r" && next === "\n") {
-          i++;
-        }
-
-        row.push(value);
-
-        if (row.some(cell => cell.trim() !== "")) {
-          rows.push(row);
-        }
-
-        row = [];
-        value = "";
-
-      }
-
-      else {
-
-        value += char;
-
-      }
-
-    }
-
-
-    if (value || row.length) {
-
-      row.push(value);
-      rows.push(row);
-
-    }
-
-
-    return rows;
-
-  }
-
-
-  function calculateWinPercentage(row) {
-
-    const games =
-      row.wins +
-      row.losses +
-      row.ties;
-
-
-    if (games === 0) {
-      return 0;
-    }
-
-
-    return (
-      row.wins +
-      row.ties * 0.5
-    ) / games;
-
-  }
-
-
-  function formatWinPercentage(row) {
-
-    return calculateWinPercentage(row)
-      .toFixed(3)
-      .replace(/^0/, "");
-
-  }
-
-
-  function calculateDifference(row) {
-
-    return row.pointsFor - row.pointsAgainst;
-
-  }
-
-
-  function formatDifference(row) {
-
-    const difference =
-      calculateDifference(row);
-
-
-    if (difference > 0) {
-
-      return `+${difference.toFixed(2)}`;
-
-    }
-
-
-    return difference.toFixed(2);
-
-  }
-
-
-  function getSortValue(row, key) {
-
-    if (key === "winPct") {
-      return calculateWinPercentage(row);
-    }
-
-
-    if (key === "difference") {
-      return calculateDifference(row);
-    }
-
-
-    return row[key];
-
-  }
-
-
-  function getDefaultDirection(key) {
-
-    if (
-      key === "rank" ||
-      key === "manager"
-    ) {
-
-      return "asc";
-
-    }
-
-
-    return "desc";
-
-  }
-
-
-  function updateSortArrows() {
-
-    sortButtons.forEach(button => {
-
-      const arrow =
-        button.querySelector(".sort-arrow");
-
-
-      if (
-        button.dataset.sort ===
-        sortState.key
-      ) {
-
-        arrow.textContent =
-          sortState.direction === "asc"
-            ? "▲"
-            : "▼";
-
-      }
-
-      else {
-
-        arrow.textContent = "";
-
-      }
-
-    });
-
-  }
-
-
-  function namesMatch(standingsName, awardName) {
-
-    if (!awardName) {
-      return false;
-    }
-
-
-    return (
-      standingsName.trim().toLowerCase() ===
-      awardName.trim().toLowerCase()
-    );
-
-  }
-
-
-  function getManagerBadges(manager, season) {
-
-    /*
-      No season-specific badges are shown
-      on the All-Time table.
-    */
-
-    if (season === "all-time") {
-      return "";
-    }
-
-
-    const seasonAwards =
-      championsData.find(
-        row => row.season === season
-      );
-
-
-    if (!seasonAwards) {
-      return "";
-    }
-
-
-    const badges = [];
-
-
-    if (
-      namesMatch(manager, seasonAwards.champion) ||
-      namesMatch(manager, seasonAwards.coChampion)
-    ) {
-
-      badges.push(
-        `<span class="standings-badge champion-badge">CHAMPION</span>`
-      );
-
-    }
-
-
-    if (
-      namesMatch(manager, seasonAwards.runnerUp)
-    ) {
-
-      badges.push(
-        `<span class="standings-badge second-badge">2ND</span>`
-      );
-
-    }
-
-
-    if (
-      namesMatch(manager, seasonAwards.thirdPlace)
-    ) {
-
-      badges.push(
-        `<span class="standings-badge third-badge">3RD</span>`
-      );
-
-    }
-
-
-    if (
-      namesMatch(manager, seasonAwards.scoringLeader)
-    ) {
-
-      badges.push(
-        `<span class="standings-badge scoring-badge">SCORING LEADER</span>`
-      );
-
-    }
-
-
-    return badges.join("");
-
-  }
-
-
-  function buildAllTimeStandings() {
-
-    const managers = {};
-
-
-    standingsData.forEach(row => {
-
-      /*
-        Manager/team names are treated exactly
-        as they appear in the Standings sheet.
-
-        That means Ryuke remains its own team.
-      */
-
-      if (!managers[row.manager]) {
-
-        managers[row.manager] = {
-          manager: row.manager,
-          seasonsPlayed: 0,
-          wins: 0,
-          losses: 0,
-          ties: 0,
-          pointsFor: 0,
-          pointsAgainst: 0,
-          moves: 0
-        };
-
-      }
-
-      managers[row.manager].seasonsPlayed += 1;
-
-      managers[row.manager].wins +=
-        row.wins;
-
-      managers[row.manager].losses +=
-        row.losses;
-
-      managers[row.manager].ties +=
-        row.ties;
-
-      managers[row.manager].pointsFor +=
-        row.pointsFor;
-
-      managers[row.manager].pointsAgainst +=
-        row.pointsAgainst;
-
-      managers[row.manager].moves +=
-        row.moves;
-
-    });
-
-
-    const allTime =
-      Object.values(managers);
-
-
-    /*
-      Official All-Time rank:
-      1. Total Wins
-      2. Win Percentage
-      3. Points For
-    */
-
-    allTime.sort((a, b) => {
-
-      if (b.wins !== a.wins) {
-        return b.wins - a.wins;
-      }
-
-
-      const bWinPct =
-        calculateWinPercentage(b);
-
-      const aWinPct =
-        calculateWinPercentage(a);
-
-
-      if (bWinPct !== aWinPct) {
-        return bWinPct - aWinPct;
-      }
-
-
-      return b.pointsFor - a.pointsFor;
-
-    });
-
-
-    allTime.forEach((row, index) => {
-
-      row.rank = index + 1;
-
-    });
-
-
-    return allTime;
-
-  }
-
-
-  function renderStandings(season) {
+    const standingsTitle =
+      document.getElementById("standingsTitle");
 
     const seasonsPlayedHeader =
       document.getElementById("seasonsPlayedHeader");
-    
-    seasonsPlayedHeader.style.display =
-      season === "all-time" ? "" : "none";
 
-    let seasonData;
+    const sortButtons =
+      document.querySelectorAll(".sort-button");
 
 
-    if (season === "all-time") {
+    let standingsData = [];
+    let championsData = [];
 
-      seasonData =
-        buildAllTimeStandings();
-
-      standingsTitle.textContent =
-        "All-Time Standings";
-
-    }
-
-    else {
-
-      seasonData =
-        standingsData.filter(
-          row => row.season === season
-        );
-
-      standingsTitle.textContent =
-        `${season} Standings`;
-
-    }
+    let sortState = {
+      key: "rank",
+      direction: "asc"
+    };
 
 
-    seasonData.sort((a, b) => {
+    function parseCSV(text) {
 
-      const aValue =
-        getSortValue(
-          a,
-          sortState.key
-        );
+      const rows = [];
 
-      const bValue =
-        getSortValue(
-          b,
-          sortState.key
-        );
+      let row = [];
+      let value = "";
+      let insideQuotes = false;
 
 
-      let comparison;
+      for (let i = 0; i < text.length; i++) {
+
+        const char = text[i];
+        const next = text[i + 1];
 
 
-      if (
-        typeof aValue === "string"
-      ) {
+        if (char === '"' && insideQuotes && next === '"') {
 
-        comparison =
-          aValue.localeCompare(
-            bValue
-          );
+          value += '"';
+          i++;
+
+        } else if (char === '"') {
+
+          insideQuotes = !insideQuotes;
+
+        } else if (char === "," && !insideQuotes) {
+
+          row.push(value);
+          value = "";
+
+        } else if (
+          (char === "\n" || char === "\r") &&
+          !insideQuotes
+        ) {
+
+          if (char === "\r" && next === "\n") {
+            i++;
+          }
+
+          row.push(value);
+
+          if (row.some(cell => cell.trim() !== "")) {
+            rows.push(row);
+          }
+
+          row = [];
+          value = "";
+
+        } else {
+
+          value += char;
+
+        }
 
       }
 
-      else {
 
-        comparison =
-          aValue - bValue;
+      if (value || row.length) {
+
+        row.push(value);
+        rows.push(row);
 
       }
 
 
-      if (
-        comparison === 0 &&
-        sortState.key !== "rank"
-      ) {
+      return rows;
 
-        comparison =
-          a.rank - b.rank;
+    }
 
+
+    function calculateWinPercentage(row) {
+
+      const games =
+        row.wins +
+        row.losses +
+        row.ties;
+
+
+      if (games === 0) {
+        return 0;
       }
 
 
       return (
-        sortState.direction === "asc"
-          ? comparison
-          : -comparison
-      );
+        row.wins +
+        row.ties * 0.5
+      ) / games;
 
-    });
-
-
-    standingsBody.innerHTML = "";
+    }
 
 
-    seasonData.forEach(row => {
+    function formatWinPercentage(row) {
 
-      const tr =
-        document.createElement("tr");
+      return calculateWinPercentage(row)
+        .toFixed(3)
+        .replace(/^0/, "");
+
+    }
 
 
-      const badges =
-        getManagerBadges(
-          row.manager,
-          season
+    function calculateDifference(row) {
+
+      return row.pointsFor -
+        row.pointsAgainst;
+
+    }
+
+
+    function formatDifference(row) {
+
+      const difference =
+        calculateDifference(row);
+
+
+      if (difference > 0) {
+        return `+${difference.toFixed(2)}`;
+      }
+
+
+      return difference.toFixed(2);
+
+    }
+
+
+    function getSortValue(row, key) {
+
+      if (key === "winPct") {
+        return calculateWinPercentage(row);
+      }
+
+      if (key === "difference") {
+        return calculateDifference(row);
+      }
+
+      return row[key];
+
+    }
+
+
+    function getDefaultDirection(key) {
+
+      if (
+        key === "rank" ||
+        key === "manager"
+      ) {
+        return "asc";
+      }
+
+      return "desc";
+
+    }
+
+
+    function updateSortArrows() {
+
+      sortButtons.forEach(button => {
+
+        const arrow =
+          button.querySelector(".sort-arrow");
+
+
+        if (
+          button.dataset.sort ===
+          sortState.key
+        ) {
+
+          arrow.textContent =
+            sortState.direction === "asc"
+              ? "▲"
+              : "▼";
+
+        } else {
+
+          arrow.textContent = "";
+
+        }
+
+      });
+
+    }
+
+
+    function namesMatch(standingsName, awardName) {
+
+      if (!awardName) {
+        return false;
+      }
+
+
+      const standings =
+        standingsName.trim().toLowerCase();
+
+      const award =
+        awardName.trim().toLowerCase();
+
+
+      if (standings === award) {
+        return true;
+      }
+
+
+      /*
+        2023 Ryuke appears as:
+        "Ryuke (Ryan/Luke)" in Standings
+        and "Ryuke" in Champions.
+      */
+
+      if (
+        standings.startsWith("ryuke") &&
+        award === "ryuke"
+      ) {
+        return true;
+      }
+
+
+      return false;
+
+    }
+
+
+    function getManagerBadges(manager, season) {
+
+      /*
+        All-Time does not show
+        season-specific award badges.
+      */
+
+      if (season === "all-time") {
+        return "";
+      }
+
+
+      const seasonAwards =
+        championsData.find(
+          row => row.season === season
         );
 
 
-      <td>
-        <div class="manager-cell">
-      
-          <span class="manager-name">
-            ${row.manager}
-          </span>
-      
-          <span class="manager-badges">
-            ${badges}
-          </span>
-      
-        </div>
-      </td>
-      
-      ${season === "all-time"
-        ? `<td>${row.seasonsPlayed}</td>`
-        : ""
+      if (!seasonAwards) {
+        return "";
       }
-      
-      <td>${row.wins}</td>
-        <td>${row.losses}</td>
-        <td>${row.ties}</td>
-
-        <td>
-          ${formatWinPercentage(row)}
-        </td>
-
-        <td>
-          ${row.pointsFor.toFixed(2)}
-        </td>
-
-        <td>
-          ${row.pointsAgainst.toFixed(2)}
-        </td>
-
-        <td>
-          ${formatDifference(row)}
-        </td>
-
-        <td>
-          ${row.moves}
-        </td>
-      `;
 
 
-      standingsBody.appendChild(tr);
-
-    });
-
-
-    updateSortArrows();
-
-  }
-
-
-  async function loadStandings() {
-
-    try {
-
-      const [
-        standingsResponse,
-        championsResponse
-      ] = await Promise.all([
-
-        fetch(standingsCsvUrl),
-        fetch(championsCsvUrl)
-
-      ]);
+      const badges = [];
 
 
       if (
-        !standingsResponse.ok ||
-        !championsResponse.ok
+        namesMatch(
+          manager,
+          seasonAwards.champion
+        ) ||
+        namesMatch(
+          manager,
+          seasonAwards.coChampion
+        )
       ) {
 
-        throw new Error(
-          "Could not load league data."
+        badges.push(
+          `<span class="standings-badge champion-badge">CHAMPION</span>`
         );
 
       }
 
 
-      const standingsText =
-        await standingsResponse.text();
-
-      const championsText =
-        await championsResponse.text();
-
-
-      const standingsRows =
-        parseCSV(standingsText);
-
-      const championsRows =
-        parseCSV(championsText);
-
-
-      standingsRows.shift();
-      championsRows.shift();
-
-
-      standingsData =
-        standingsRows.map(row => ({
-
-          season:
-            row[0].trim(),
-
-          rank:
-            Number(row[1]),
-
-          manager:
-            row[2].trim(),
-
-          wins:
-            Number(row[3]),
-
-          losses:
-            Number(row[4]),
-
-          ties:
-            Number(row[5]),
-
-          pointsFor:
-            Number(row[6]),
-
-          pointsAgainst:
-            Number(row[7]),
-
-          moves:
-            Number(row[8])
-
-        }));
-
-
-      championsData =
-        championsRows.map(row => ({
-
-          season:
-            row[0]?.trim() || "",
-
-          champion:
-            row[1]?.trim() || "",
-
-          coChampion:
-            row[2]?.trim() || "",
-
-          runnerUp:
-            row[3]?.trim() || "",
-
-          thirdPlace:
-            row[4]?.trim() || "",
-
-          scoringLeader:
-            row[5]?.trim() || ""
-
-        }));
-
-
-      const seasons = [
-        ...new Set(
-          standingsData.map(
-            row => row.season
-          )
+      if (
+        namesMatch(
+          manager,
+          seasonAwards.runnerUp
         )
-      ].sort(
-        (a, b) =>
-          Number(b) - Number(a)
-      );
+      ) {
+
+        badges.push(
+          `<span class="standings-badge second-badge">2ND</span>`
+        );
+
+      }
 
 
-      seasonSelector.innerHTML = "";
+      if (
+        namesMatch(
+          manager,
+          seasonAwards.thirdPlace
+        )
+      ) {
+
+        badges.push(
+          `<span class="standings-badge third-badge">3RD</span>`
+        );
+
+      }
+
+
+      if (
+        namesMatch(
+          manager,
+          seasonAwards.scoringLeader
+        )
+      ) {
+
+        badges.push(
+          `<span class="standings-badge scoring-badge">SCORING LEADER</span>`
+        );
+
+      }
+
+
+      return badges.join("");
+
+    }
+
+
+    function buildAllTimeStandings() {
+
+      const managers = {};
+
+
+      standingsData.forEach(row => {
+
+        /*
+          Every unique Manager name is treated
+          as its own historical team.
+
+          Ryuke therefore remains separate.
+        */
+
+        if (!managers[row.manager]) {
+
+          managers[row.manager] = {
+
+            manager: row.manager,
+
+            seasonsPlayed: 0,
+
+            wins: 0,
+            losses: 0,
+            ties: 0,
+
+            pointsFor: 0,
+            pointsAgainst: 0,
+
+            moves: 0
+
+          };
+
+        }
+
+
+        managers[row.manager].seasonsPlayed += 1;
+
+        managers[row.manager].wins +=
+          row.wins;
+
+        managers[row.manager].losses +=
+          row.losses;
+
+        managers[row.manager].ties +=
+          row.ties;
+
+        managers[row.manager].pointsFor +=
+          row.pointsFor;
+
+        managers[row.manager].pointsAgainst +=
+          row.pointsAgainst;
+
+        managers[row.manager].moves +=
+          row.moves;
+
+      });
+
+
+      const allTime =
+        Object.values(managers);
 
 
       /*
-        Add All-Time at the top
-        of the dropdown.
+        Default All-Time ranking:
+
+        1. Total Wins
+        2. Win Percentage
+        3. Points For
       */
 
-      const allTimeOption =
-        document.createElement("option");
+      allTime.sort((a, b) => {
 
-      allTimeOption.value =
-        "all-time";
+        if (b.wins !== a.wins) {
+          return b.wins - a.wins;
+        }
 
-      allTimeOption.textContent =
-        "All-Time";
 
-      seasonSelector.appendChild(
-        allTimeOption
+        const bWinPct =
+          calculateWinPercentage(b);
+
+        const aWinPct =
+          calculateWinPercentage(a);
+
+
+        if (bWinPct !== aWinPct) {
+          return bWinPct - aWinPct;
+        }
+
+
+        return b.pointsFor -
+          a.pointsFor;
+
+      });
+
+
+      allTime.forEach(
+        (row, index) => {
+
+          row.rank =
+            index + 1;
+
+        }
       );
 
 
-      /*
-        Then add every individual season.
-      */
+      return allTime;
 
-      seasons.forEach(season => {
+    }
 
-        const option =
-          document.createElement(
-            "option"
+
+    function renderStandings(season) {
+
+      const isAllTime =
+        season === "all-time";
+
+
+      seasonsPlayedHeader.style.display =
+        isAllTime ? "" : "none";
+
+
+      let seasonData;
+
+
+      if (isAllTime) {
+
+        seasonData =
+          buildAllTimeStandings();
+
+        standingsTitle.textContent =
+          "All-Time Standings";
+
+      } else {
+
+        seasonData =
+          standingsData.filter(
+            row => row.season === season
+          );
+
+        standingsTitle.textContent =
+          `${season} Standings`;
+
+      }
+
+
+      seasonData.sort((a, b) => {
+
+        const aValue =
+          getSortValue(
+            a,
+            sortState.key
+          );
+
+        const bValue =
+          getSortValue(
+            b,
+            sortState.key
           );
 
 
-        option.value = season;
-        option.textContent = season;
+        let comparison;
 
 
-        seasonSelector.appendChild(
-          option
+        if (
+          typeof aValue === "string"
+        ) {
+
+          comparison =
+            aValue.localeCompare(
+              bValue
+            );
+
+        } else {
+
+          comparison =
+            aValue - bValue;
+
+        }
+
+
+        if (
+          comparison === 0 &&
+          sortState.key !== "rank"
+        ) {
+
+          comparison =
+            a.rank - b.rank;
+
+        }
+
+
+        return (
+          sortState.direction === "asc"
+            ? comparison
+            : -comparison
         );
 
       });
 
 
-      /*
-        Keep the newest season as the
-        default when the page first opens.
-      */
-
-      seasonSelector.value =
-        seasons[0];
+      standingsBody.innerHTML = "";
 
 
-      renderStandings(
-        seasons[0]
-      );
+      seasonData.forEach(row => {
 
-    }
-
-
-    catch (error) {
-
-      console.error(error);
+        const tr =
+          document.createElement("tr");
 
 
-      standingsBody.innerHTML = `
-        <tr>
-          <td colspan="10">
-            Unable to load standings.
+        const badges =
+          getManagerBadges(
+            row.manager,
+            season
+          );
+
+
+        const seasonsPlayedCell =
+          isAllTime
+            ? `<td>${row.seasonsPlayed}</td>`
+            : "";
+
+
+        tr.innerHTML = `
+
+          <td>
+            ${row.rank}
           </td>
-        </tr>
-      `;
+
+          <td>
+
+            <div class="manager-cell">
+
+              <span class="manager-name">
+                ${row.manager}
+              </span>
+
+              <span class="manager-badges">
+                ${badges}
+              </span>
+
+            </div>
+
+          </td>
+
+          ${seasonsPlayedCell}
+
+          <td>
+            ${row.wins}
+          </td>
+
+          <td>
+            ${row.losses}
+          </td>
+
+          <td>
+            ${row.ties}
+          </td>
+
+          <td>
+            ${formatWinPercentage(row)}
+          </td>
+
+          <td>
+            ${row.pointsFor.toFixed(2)}
+          </td>
+
+          <td>
+            ${row.pointsAgainst.toFixed(2)}
+          </td>
+
+          <td>
+            ${formatDifference(row)}
+          </td>
+
+          <td>
+            ${row.moves}
+          </td>
+
+        `;
+
+
+        standingsBody.appendChild(tr);
+
+      });
+
+
+      updateSortArrows();
 
     }
 
-  }
 
+    async function loadStandings() {
 
-  sortButtons.forEach(button => {
+      try {
 
-    button.addEventListener(
-      "click",
-      () => {
+        const [
+          standingsResponse,
+          championsResponse
+        ] = await Promise.all([
 
-        const key =
-          button.dataset.sort;
+          fetch(standingsCsvUrl),
+          fetch(championsCsvUrl)
+
+        ]);
 
 
         if (
-          sortState.key === key
+          !standingsResponse.ok ||
+          !championsResponse.ok
         ) {
 
-          sortState.direction =
-            sortState.direction === "asc"
-              ? "desc"
-              : "asc";
+          throw new Error(
+            "Could not load league data."
+          );
 
         }
 
-        else {
 
-          sortState.key = key;
+        const standingsText =
+          await standingsResponse.text();
 
-          sortState.direction =
-            getDefaultDirection(key);
+        const championsText =
+          await championsResponse.text();
+
+
+        const standingsRows =
+          parseCSV(standingsText);
+
+        const championsRows =
+          parseCSV(championsText);
+
+
+        standingsRows.shift();
+        championsRows.shift();
+
+
+        standingsData =
+          standingsRows
+            .map(row => ({
+
+              season:
+                row[0]?.trim() || "",
+
+              rank:
+                Number(row[1]),
+
+              manager:
+                row[2]?.trim() || "",
+
+              wins:
+                Number(row[3]),
+
+              losses:
+                Number(row[4]),
+
+              ties:
+                Number(row[5]),
+
+              pointsFor:
+                Number(row[6]),
+
+              pointsAgainst:
+                Number(row[7]),
+
+              moves:
+                Number(row[8])
+
+            }))
+            .filter(row =>
+              row.season !== "" &&
+              row.manager !== ""
+            );
+
+
+        championsData =
+          championsRows
+            .map(row => ({
+
+              season:
+                row[0]?.trim() || "",
+
+              champion:
+                row[1]?.trim() || "",
+
+              coChampion:
+                row[2]?.trim() || "",
+
+              runnerUp:
+                row[3]?.trim() || "",
+
+              thirdPlace:
+                row[4]?.trim() || "",
+
+              scoringLeader:
+                row[5]?.trim() || ""
+
+            }))
+            .filter(row =>
+              row.season !== ""
+            );
+
+
+        const seasons = [
+          ...new Set(
+            standingsData.map(
+              row => row.season
+            )
+          )
+        ].sort(
+          (a, b) =>
+            Number(b) - Number(a)
+        );
+
+
+        seasonSelector.innerHTML = "";
+
+
+        const allTimeOption =
+          document.createElement("option");
+
+        allTimeOption.value =
+          "all-time";
+
+        allTimeOption.textContent =
+          "All-Time";
+
+        seasonSelector.appendChild(
+          allTimeOption
+        );
+
+
+        seasons.forEach(season => {
+
+          const option =
+            document.createElement("option");
+
+          option.value =
+            season;
+
+          option.textContent =
+            season;
+
+          seasonSelector.appendChild(
+            option
+          );
+
+        });
+
+
+        /*
+          Open on the newest individual
+          season by default.
+        */
+
+        seasonSelector.value =
+          seasons[0];
+
+
+        renderStandings(
+          seasons[0]
+        );
+
+      } catch (error) {
+
+        console.error(error);
+
+
+        standingsBody.innerHTML = `
+          <tr>
+            <td colspan="11">
+              Unable to load standings.
+            </td>
+          </tr>
+        `;
+
+      }
+
+    }
+
+
+    sortButtons.forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          const key =
+            button.dataset.sort;
+
+
+          if (
+            sortState.key === key
+          ) {
+
+            sortState.direction =
+              sortState.direction === "asc"
+                ? "desc"
+                : "asc";
+
+          } else {
+
+            sortState.key =
+              key;
+
+            sortState.direction =
+              getDefaultDirection(key);
+
+          }
+
+
+          renderStandings(
+            seasonSelector.value
+          );
 
         }
+      );
+
+    });
+
+
+    seasonSelector.addEventListener(
+      "change",
+      () => {
+
+        /*
+          Return to official rank order
+          whenever switching seasons/views.
+        */
+
+        sortState = {
+          key: "rank",
+          direction: "asc"
+        };
 
 
         renderStandings(
@@ -987,36 +1061,11 @@
       }
     );
 
-  });
 
+    loadStandings();
 
-  seasonSelector.addEventListener(
-    "change",
-    () => {
+  </script>
 
-      /*
-        Reset back to normal ranking
-        whenever switching views.
-      */
-
-      sortState = {
-        key: "rank",
-        direction: "asc"
-      };
-
-
-      renderStandings(
-        seasonSelector.value
-      );
-
-    }
-  );
-
-
-  loadStandings();
-
-</script>
-  
 </body>
 
 </html>
