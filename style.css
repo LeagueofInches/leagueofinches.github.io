@@ -454,6 +454,72 @@ main p {
   font-size: 0.65rem;
 }
 
+/* STANDINGS AWARD BADGES */
+
+.manager-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.manager-name {
+  white-space: nowrap;
+}
+
+.manager-badges {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.standings-badge {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 3px 6px;
+
+  border-radius: 4px;
+
+  font-size: 0.58rem;
+  font-weight: 800;
+  line-height: 1;
+
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.champion-badge {
+  color: #080808;
+
+  background: linear-gradient(
+    135deg,
+    var(--gold-deep),
+    var(--gold-light)
+  );
+
+  border: 1px solid var(--gold-light);
+}
+
+.second-badge {
+  color: #d5d5d5;
+  background: rgba(190, 190, 190, 0.10);
+  border: 1px solid rgba(200, 200, 200, 0.35);
+}
+
+.third-badge {
+  color: #c58a52;
+  background: rgba(176, 110, 55, 0.10);
+  border: 1px solid rgba(176, 110, 55, 0.40);
+}
+
+.scoring-badge {
+  color: var(--gold-light);
+  background: rgba(200, 155, 44, 0.07);
+  border: 1px solid var(--border-gold);
+}
+
 /* ==============================================================================================================================================================================================
    RECORD BOOK
    ============================================================================================================================================================================================== */
