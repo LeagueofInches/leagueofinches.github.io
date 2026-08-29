@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,12 +12,11 @@
 
   <header class="site-header">
     <div class="header-inner">
-  
       <a href="index.html" class="site-brand">
         <h1>LEAGUE OF INCHES</h1>
         <span>Fantasy Football</span>
       </a>
-  
+
       <nav class="main-nav desktop-nav">
         <a href="index.html">Home</a>
         <a href="standings.html">Standings</a>
@@ -26,10 +26,9 @@
         <a href="news.html">League News</a>
         <a href="league-info.html">League Info</a>
       </nav>
-  
+
       <details class="mobile-nav">
         <summary>☰</summary>
-  
         <div class="mobile-nav-links">
           <a href="index.html">Home</a>
           <a href="standings.html">Standings</a>
@@ -40,12 +39,10 @@
           <a href="league-info.html">League Info</a>
         </div>
       </details>
-  
     </div>
   </header>
-  
-  <main>
 
+  <main>
     <section class="page-header">
       <p class="eyebrow">League Headquarters</p>
       <h2>League Info</h2>
@@ -54,72 +51,150 @@
       </p>
     </section>
 
-    <section class="info-grid">
-
+    <section class="info-grid" id="infoGrid">
       <article class="info-card">
-        <p class="info-label">League Format</p>
-        <h3>League Structure</h3>
-        <p>
-          League size, roster format, regular season structure, and playoff format.
-        </p>
+        <p>Loading league information...</p>
       </article>
-
-      <article class="info-card">
-        <p class="info-label">Money</p>
-        <h3>Buy-In & Payouts</h3>
-        <p>
-          Entry fee, championship payouts, scoring awards, and weekly prizes.
-        </p>
-      </article>
-
-      <article class="info-card">
-        <p class="info-label">Roster Rules</p>
-        <h3>Keeper Rules</h3>
-        <p>
-          Keeper eligibility, draft-round restrictions, waiver rules, and future keeper costs.
-        </p>
-      </article>
-
-      <article class="info-card">
-        <p class="info-label">Scoring</p>
-        <h3>Scoring Settings</h3>
-        <p>
-          Passing, rushing, receiving, defensive, kicking, and miscellaneous scoring rules.
-        </p>
-      </article>
-
-      <article class="info-card">
-        <p class="info-label">Postseason</p>
-        <h3>Playoff Rules</h3>
-        <p>
-          Playoff qualification, seeding rules, tiebreakers, and consolation bracket rules.
-        </p>
-      </article>
-
-      <article class="info-card">
-        <p class="info-label">Official Rules</p>
-        <h3>League Constitution</h3>
-        <p>
-          Commissioner policies, rule changes, voting procedures, and anything else that governs the league.
-        </p>
-      </article>
-
     </section>
-
   </main>
 
-    <footer class="site-footer">
-      <div class="footer-inner">
-    
-        <div class="footer-brand">
-          <strong>LEAGUE OF INCHES</strong>
-          <span>Fantasy Football Since 2022</span>
-        </div>
-    
-        <p>Built for the history, records, and bad decisions.</p>
-    
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <strong>LEAGUE OF INCHES</strong>
+        <span>Fantasy Football Since 2022</span>
       </div>
-    </footer>
-  
+      <p>Built for the history, records, and bad decisions.</p>
+    </div>
+  </footer>
+
+  <script>
+    const leagueInfoCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRSITMjap0Q_P0zNyA2rcKENfWgDXdniz59mCXW-wm8pwgzMSNFcR_bJD4pZ00-SyifWOXm8g_CKNQC/pub?gid=422592213&single=true&output=csv";
+
+    const infoGrid = document.getElementById("infoGrid");
+
+    const sections = [
+      { name: "League Structure", label: "League Format" },
+      { name: "Buy-In & Payouts", label: "Money" },
+      { name: "Keeper Rules", label: "Roster Rules" },
+      { name: "Scoring Settings", label: "Scoring" },
+      { name: "Playoff Rules", label: "Postseason" },
+      { name: "League Constitution", label: "Official Rules" }
+    ];
+
+    function parseCSV(text) {
+      const rows = [];
+      let row = [];
+      let value = "";
+      let insideQuotes = false;
+
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const next = text[i + 1];
+
+        if (char === '"' && insideQuotes && next === '"') {
+          value += '"';
+          i++;
+        } else if (char === '"') {
+          insideQuotes = !insideQuotes;
+        } else if (char === "," && !insideQuotes) {
+          row.push(value);
+          value = "";
+        } else if ((char === "\n" || char === "\r") && !insideQuotes) {
+          if (char === "\r" && next === "\n") i++;
+          row.push(value);
+          if (row.some(cell => cell.trim() !== "")) rows.push(row);
+          row = [];
+          value = "";
+        } else {
+          value += char;
+        }
+      }
+
+      if (value || row.length) {
+        row.push(value);
+        rows.push(row);
+      }
+
+      return rows;
+    }
+
+    function createInfoCard(section, data) {
+      const card = document.createElement("article");
+      card.className = "info-card";
+
+      if (section.name === "Scoring Settings") {
+        card.classList.add("scoring-settings-card");
+      }
+
+      const items = data
+        .filter(row => row.section === section.name)
+        .sort((a, b) => a.order - b.order);
+
+      let content = "";
+
+      if (items.length) {
+        content = `
+          <div class="info-list">
+            ${items.map(item => `
+              <div class="info-row">
+                <div class="info-row-main">
+                  <span class="info-item">${item.item}</span>
+                  <strong class="info-value">${item.value}</strong>
+                </div>
+                ${item.details ? `<span class="info-details">${item.details}</span>` : ""}
+              </div>
+            `).join("")}
+          </div>
+        `;
+      } else {
+        content = `<p class="info-empty">More information coming soon.</p>`;
+      }
+
+      card.innerHTML = `
+        <p class="info-label">${section.label}</p>
+        <h3>${section.name}</h3>
+        ${content}
+      `;
+
+      return card;
+    }
+
+    async function loadLeagueInfo() {
+      try {
+        const response = await fetch(leagueInfoCsvUrl);
+        if (!response.ok) throw new Error("Could not load league information.");
+
+        const rows = parseCSV(await response.text());
+        rows.shift();
+
+        const data = rows
+          .map(row => ({
+            section: row[0]?.trim() || "",
+            item: row[1]?.trim() || "",
+            value: row[2]?.trim() || "",
+            details: row[3]?.trim() || "",
+            order: Number(row[4]) || 0
+          }))
+          .filter(row => row.section && row.item);
+
+        infoGrid.innerHTML = "";
+
+        sections.forEach(section => {
+          infoGrid.appendChild(createInfoCard(section, data));
+        });
+      } catch (error) {
+        console.error(error);
+        infoGrid.innerHTML = `
+          <article class="info-card">
+            <h3>Unable to load league information.</h3>
+          </article>
+        `;
+      }
+    }
+
+    loadLeagueInfo();
+  </script>
+
 </body>
 </html>
