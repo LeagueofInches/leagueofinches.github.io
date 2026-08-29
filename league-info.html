@@ -78,8 +78,7 @@
       { name: "Buy-In & Payouts", label: "Money" },
       { name: "Keeper Rules", label: "Roster Rules" },
       { name: "Scoring Settings", label: "Scoring" },
-      { name: "Playoff Rules", label: "Postseason" },
-      { name: "League Constitution", label: "Official Rules" }
+      { name: "Playoff Rules", label: "Postseason" }
     ];
 
     function parseCSV(text) {
@@ -123,6 +122,14 @@
       const card = document.createElement("article");
       card.className = "info-card";
     
+      if (section.name === "Keeper Rules") {
+        card.classList.add("keeper-settings-card");
+      }
+    
+      if (section.name === "Scoring Settings") {
+        card.classList.add("scoring-settings-card");
+      }
+    
       const items = data
         .filter(row => row.section === section.name)
         .sort((a, b) => a.order - b.order);
@@ -130,8 +137,6 @@
       let content = "";
     
       if (section.name === "Scoring Settings") {
-        card.classList.add("scoring-settings-card");
-    
         const offenseItems = items.filter(item => item.details.toLowerCase() === "offense");
         const defenseItems = items.filter(item => item.details.toLowerCase() === "defense");
     
