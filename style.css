@@ -223,6 +223,35 @@ main p {
   flex-wrap: wrap;
 }
 
+/* HOMEPAGE HERO LOGO */
+
+.hero-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+  align-items: center;
+  gap: 50px;
+}
+
+.hero-copy {
+  min-width: 0;
+}
+
+.hero-crest {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-crest img {
+  display: block;
+  width: 100%;
+  max-width: 430px;
+  height: auto;
+  filter:
+    drop-shadow(0 20px 35px rgba(0, 0, 0, 0.55))
+    drop-shadow(0 0 20px rgba(200, 155, 44, 0.08));
+}
+
 .button {
   display: inline-block;
   padding: 13px 20px;
@@ -1240,6 +1269,19 @@ main p {
   .hero h2 {
   font-size: clamp(3rem, 14vw, 4.5rem);
   line-height: 0.95;
+  }
+
+  .hero-layout {
+  grid-template-columns: 1fr;
+  gap: 35px;
+  }
+  
+  .hero-crest {
+    order: -1;
+  }
+  
+  .hero-crest img {
+    max-width: 300px;
   }
 
   .page-header {
