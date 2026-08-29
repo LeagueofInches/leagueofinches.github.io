@@ -1000,6 +1000,70 @@ main p {
   box-shadow: var(--shadow-card);
 }
 
+/* LEAGUE INFO DATA */
+
+.info-list {
+  margin-top: 22px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.info-row {
+  padding: 13px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.info-row-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 20px;
+}
+
+.info-item {
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.info-value {
+  color: var(--gold-light);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.info-details {
+  display: block;
+  margin-top: 5px;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.info-empty {
+  margin-top: 20px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.scoring-settings-card {
+  grid-column: 1 / -1;
+}
+
+.scoring-settings-card .info-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 40px;
+}
+
+@media (max-width: 700px) {
+  .scoring-settings-card .info-list {
+    grid-template-columns: 1fr;
+  }
+
+  .info-row-main {
+    gap: 12px;
+  }
+}
+
 .info-label {
   margin: 0 0 10px;
   color: var(--gold);
