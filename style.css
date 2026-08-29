@@ -1048,15 +1048,30 @@ main p {
   grid-column: 1 / -1;
 }
 
-.scoring-settings-card .info-list {
+.scoring-groups {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: 40px;
+  gap: 32px;
+  margin-top: 22px;
+}
+
+.scoring-group-title {
+  margin: 0 0 14px;
+  color: var(--gold-light);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.scoring-group .info-list {
+  margin-top: 0;
 }
 
 @media (max-width: 700px) {
-  .scoring-settings-card .info-list {
+  .scoring-groups {
     grid-template-columns: 1fr;
+    gap: 24px;
   }
 
   .info-row-main {
