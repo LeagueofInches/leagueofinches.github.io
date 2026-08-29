@@ -945,6 +945,41 @@ main p {
   font-weight: bold;
 }
 
+/* LEAGUE NEWS ARTICLES */
+
+.news-summary {
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.news-toggle {
+  margin-top: 18px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--gold-light);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.news-toggle:hover {
+  color: var(--gold-shine);
+}
+
+.news-body {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-subtle);
+  color: var(--text-main);
+  line-height: 1.7;
+  white-space: pre-line;
+}
+
+.news-body[hidden] {
+  display: none;
+}
 
 /* ==============================================================================================================================================================================================
    LEAGUE INFO
