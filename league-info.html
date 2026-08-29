@@ -122,18 +122,46 @@
     function createInfoCard(section, data) {
       const card = document.createElement("article");
       card.className = "info-card";
-
-      if (section.name === "Scoring Settings") {
-        card.classList.add("scoring-settings-card");
-      }
-
+    
       const items = data
         .filter(row => row.section === section.name)
         .sort((a, b) => a.order - b.order);
-
+    
       let content = "";
-
-      if (items.length) {
+    
+      if (section.name === "Scoring Settings") {
+        card.classList.add("scoring-settings-card");
+    
+        const offenseItems = items.filter(item => item.details.toLowerCase() === "offense");
+        const defenseItems = items.filter(item => item.details.toLowerCase() === "defense");
+    
+        const renderRows = groupItems => groupItems.map(item => `
+          <div class="info-row">
+            <div class="info-row-main">
+              <span class="info-item">${item.item}</span>
+              <strong class="info-value">${item.value}</strong>
+            </div>
+          </div>
+        `).join("");
+    
+        content = `
+          <div class="scoring-groups">
+            <div class="scoring-group">
+              <h4 class="scoring-group-title">Offense</h4>
+              <div class="info-list">
+                ${renderRows(offenseItems)}
+              </div>
+            </div>
+    
+            <div class="scoring-group">
+              <h4 class="scoring-group-title">Defense</h4>
+              <div class="info-list">
+                ${renderRows(defenseItems)}
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (items.length) {
         content = `
           <div class="info-list">
             ${items.map(item => `
@@ -150,13 +178,13 @@
       } else {
         content = `<p class="info-empty">More information coming soon.</p>`;
       }
-
+    
       card.innerHTML = `
         <p class="info-label">${section.label}</p>
         <h3>${section.name}</h3>
         ${content}
       `;
-
+    
       return card;
     }
 
