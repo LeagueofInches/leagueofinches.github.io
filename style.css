@@ -1317,6 +1317,147 @@ main p {
   }
 }
 
+/* RECORD BOOK */
+
+.record-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  margin-bottom: 42px;
+  padding: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+}
+
+.record-control-label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.record-scope-toggle {
+  display: flex;
+  gap: 8px;
+}
+
+.record-scope-button {
+  padding: 10px 16px;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.record-scope-button:hover {
+  color: var(--gold-light);
+  border-color: var(--border-gold);
+}
+
+.record-scope-button.active {
+  color: #080808;
+  background: linear-gradient(135deg, var(--gold-deep), var(--gold), var(--gold-light));
+  border-color: var(--gold-light);
+}
+
+.record-book-heading {
+  margin-bottom: 36px;
+}
+
+.record-book-heading h3,
+.record-section-heading h3 {
+  margin: 4px 0 0;
+  color: var(--text-main);
+}
+
+.record-section {
+  margin-top: 48px;
+}
+
+.record-section[hidden] {
+  display: none;
+}
+
+.record-section-heading {
+  margin-bottom: 18px;
+}
+
+.record-book-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.record-entry + .record-entry {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.record-entry .record-holder {
+  margin-bottom: 3px;
+}
+
+.record-position {
+  margin: 0 0 8px;
+  color: var(--gold-light);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.position-owner {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.position-record-card {
+  border-top: 2px solid var(--border-gold);
+}
+
+@media (max-width: 900px) {
+  .record-book-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 650px) {
+  .record-controls {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .record-scope-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .record-scope-button {
+    width: 100%;
+  }
+
+  .record-season-control,
+  .record-season-control .season-selector {
+    width: 100%;
+  }
+
+  .record-book-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ==============================================================================================================================================================================================
    MOBILE
    ============================================================================================================================================================================================== */
