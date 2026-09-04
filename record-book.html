@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,12 +12,11 @@
 
   <header class="site-header">
     <div class="header-inner">
-  
       <a href="index.html" class="site-brand">
         <h1>LEAGUE OF INCHES</h1>
         <span>Fantasy Football</span>
       </a>
-  
+
       <nav class="main-nav desktop-nav">
         <a href="index.html">Home</a>
         <a href="standings.html">Standings</a>
@@ -26,10 +26,9 @@
         <a href="news.html">League News</a>
         <a href="league-info.html">League Info</a>
       </nav>
-  
+
       <details class="mobile-nav">
         <summary>☰</summary>
-  
         <div class="mobile-nav-links">
           <a href="index.html">Home</a>
           <a href="standings.html">Standings</a>
@@ -40,7 +39,6 @@
           <a href="league-info.html">League Info</a>
         </div>
       </details>
-  
     </div>
   </header>
 
@@ -54,52 +52,309 @@
       </p>
     </section>
 
-    <section class="record-grid">
+    <section class="record-controls">
+      <div>
+        <span class="record-control-label">Record Type</span>
+        <div class="record-scope-toggle">
+          <button class="record-scope-button active" data-scope="Regular Season" type="button">Regular Season</button>
+          <button class="record-scope-button" data-scope="Playoffs" type="button">Playoffs</button>
+        </div>
+      </div>
 
-      <article class="record-card">
-        <p class="record-label">Highest Single-Week Score</p>
-        <h3>217.80</h3>
-        <p class="record-holder">Example Manager</p>
-        <span class="record-meta">Week 10 • 2023</span>
-      </article>
+      <div class="record-season-control">
+        <label class="record-control-label" for="recordSeasonSelector">Season</label>
+        <select class="season-selector" id="recordSeasonSelector"></select>
+      </div>
+    </section>
 
-      <article class="record-card">
-        <p class="record-label">Lowest Single-Week Score</p>
-        <h3>54.10</h3>
-        <p class="record-holder">Example Manager</p>
-        <span class="record-meta">Week 6 • 2024</span>
-      </article>
+    <section class="record-book-heading">
+      <p class="eyebrow">League Records</p>
+      <h3 id="recordTitle">All-Time Regular Season Records</h3>
+    </section>
 
-      <article class="record-card">
-        <p class="record-label">Largest Margin of Victory</p>
-        <h3>91.22</h3>
-        <p class="record-holder">Example Manager</p>
-        <span class="record-meta">2025 Season</span>
-      </article>
+    <section class="record-section" id="gameResultSection">
+      <div class="record-section-heading">
+        <p class="eyebrow">Results & Streaks</p>
+        <h3>Game Result Records</h3>
+      </div>
+      <div class="record-book-grid" id="gameResultGrid"></div>
+    </section>
 
-      <article class="record-card">
-        <p class="record-label">Most Career Wins</p>
-        <h3>37</h3>
-        <p class="record-holder">Example Manager</p>
-        <span class="record-meta">All-Time</span>
-      </article>
+    <section class="record-section" id="scoringSection">
+      <div class="record-section-heading">
+        <p class="eyebrow">Team Performance</p>
+        <h3>Scoring Records</h3>
+      </div>
+      <div class="record-book-grid" id="scoringGrid"></div>
+    </section>
 
+    <section class="record-section" id="positionSection">
+      <div class="record-section-heading">
+        <p class="eyebrow">Individual Performances</p>
+        <h3>Position Records</h3>
+      </div>
+      <div class="record-book-grid position-record-grid" id="positionGrid"></div>
     </section>
 
   </main>
 
-    <footer class="site-footer">
-      <div class="footer-inner">
-    
-        <div class="footer-brand">
-          <strong>LEAGUE OF INCHES</strong>
-          <span>Fantasy Football Since 2022</span>
-        </div>
-    
-        <p>Built for the history, records, and bad decisions.</p>
-    
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <strong>LEAGUE OF INCHES</strong>
+        <span>Fantasy Football Since 2022</span>
       </div>
-    </footer>
-  
+      <p>Built for the history, records, and bad decisions.</p>
+    </div>
+  </footer>
+
+  <script>
+    const recordBookCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRSITMjap0Q_P0zNyA2rcKENfWgDXdniz59mCXW-wm8pwgzMSNFcR_bJD4pZ00-SyifWOXm8g_CKNQC/pub?gid=1848413368&single=true&output=csv";
+
+    const seasonSelector = document.getElementById("recordSeasonSelector");
+    const scopeButtons = document.querySelectorAll(".record-scope-button");
+    const recordTitle = document.getElementById("recordTitle");
+    const gameResultGrid = document.getElementById("gameResultGrid");
+    const scoringGrid = document.getElementById("scoringGrid");
+    const positionGrid = document.getElementById("positionGrid");
+    const gameResultSection = document.getElementById("gameResultSection");
+    const scoringSection = document.getElementById("scoringSection");
+    const positionSection = document.getElementById("positionSection");
+
+    let recordData = [];
+    let currentScope = "Regular Season";
+
+    function parseCSV(text) {
+      const rows = [];
+      let row = [];
+      let value = "";
+      let insideQuotes = false;
+
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const next = text[i + 1];
+
+        if (char === '"' && insideQuotes && next === '"') {
+          value += '"';
+          i++;
+        } else if (char === '"') {
+          insideQuotes = !insideQuotes;
+        } else if (char === "," && !insideQuotes) {
+          row.push(value);
+          value = "";
+        } else if ((char === "\n" || char === "\r") && !insideQuotes) {
+          if (char === "\r" && next === "\n") i++;
+          row.push(value);
+          if (row.some(cell => cell.trim() !== "")) rows.push(row);
+          row = [];
+          value = "";
+        } else {
+          value += char;
+        }
+      }
+
+      if (value || row.length) {
+        row.push(value);
+        rows.push(row);
+      }
+
+      return rows;
+    }
+
+    function escapeHTML(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+    }
+
+    function formatValue(value, category, record) {
+      const number = Number(value);
+      if (!Number.isFinite(number)) return escapeHTML(value);
+
+      if (category === "Position" || record.includes("Points") || record.includes("Margin")) {
+        return number.toFixed(2);
+      }
+
+      return Number.isInteger(number) ? number.toString() : number.toFixed(2);
+    }
+
+    function groupRecords(rows) {
+      const groups = new Map();
+
+      rows.forEach(row => {
+        const key = row.record;
+
+        if (!groups.has(key)) {
+          groups.set(key, {
+            record: row.record,
+            value: row.value,
+            order: row.order,
+            entries: []
+          });
+        }
+
+        groups.get(key).entries.push(row);
+      });
+
+      return [...groups.values()].sort((a, b) => a.order - b.order);
+    }
+
+    function renderStandardRecords(rows, grid, section) {
+      const groups = groupRecords(rows);
+      grid.innerHTML = "";
+      section.hidden = groups.length === 0;
+
+      groups.forEach(group => {
+        const card = document.createElement("article");
+        card.className = "record-card";
+
+        const entries = group.entries.map(entry => `
+          <div class="record-entry">
+            <p class="record-holder">${escapeHTML(entry.holder)}</p>
+            ${entry.context ? `<span class="record-meta">${escapeHTML(entry.context)}</span>` : ""}
+          </div>
+        `).join("");
+
+        card.innerHTML = `
+          <p class="record-label">${escapeHTML(group.record)}</p>
+          <h3>${formatValue(group.value, rows[0].category, group.record)}</h3>
+          <div class="record-entries">${entries}</div>
+        `;
+
+        grid.appendChild(card);
+      });
+    }
+
+    function renderPositionRecords(rows) {
+      positionGrid.innerHTML = "";
+
+      const positions = [...new Set(rows.map(row => row.position))];
+      positionSection.hidden = positions.length === 0;
+
+      positions.forEach(position => {
+        const positionRows = rows
+          .filter(row => row.position === position)
+          .sort((a, b) => a.order - b.order);
+
+        const value = positionRows[0]?.value || "";
+        const card = document.createElement("article");
+        card.className = "record-card position-record-card";
+
+        const entries = positionRows.map(entry => `
+          <div class="record-entry">
+            <p class="record-holder">${escapeHTML(entry.player)}</p>
+            ${entry.owner ? `<span class="position-owner">Owned by ${escapeHTML(entry.owner)}</span>` : ""}
+            ${entry.context ? `<span class="record-meta">${escapeHTML(entry.context)}</span>` : ""}
+          </div>
+        `).join("");
+
+        card.innerHTML = `
+          <p class="record-position">${escapeHTML(position)}</p>
+          <p class="record-label">Highest Fantasy Score</p>
+          <h3>${formatValue(value, "Position", "Position Record")}</h3>
+          <div class="record-entries">${entries}</div>
+        `;
+
+        positionGrid.appendChild(card);
+      });
+    }
+
+    function updateSeasonOptions() {
+      const seasons = [...new Set(
+        recordData
+          .filter(row => row.scope === currentScope)
+          .map(row => row.season)
+      )].sort((a, b) => {
+        if (a === "All-Time") return -1;
+        if (b === "All-Time") return 1;
+        return Number(b) - Number(a);
+      });
+
+      const previousSeason = seasonSelector.value;
+      seasonSelector.innerHTML = "";
+
+      seasons.forEach(season => {
+        const option = document.createElement("option");
+        option.value = season;
+        option.textContent = season;
+        seasonSelector.appendChild(option);
+      });
+
+      seasonSelector.value = seasons.includes(previousSeason) ? previousSeason : "All-Time";
+    }
+
+    function renderRecordBook() {
+      const season = seasonSelector.value;
+      const filtered = recordData.filter(row =>
+        row.scope === currentScope && row.season === season
+      );
+
+      recordTitle.textContent = `${season} ${currentScope} Records`;
+
+      const gameResults = filtered.filter(row => row.category === "Game Result");
+      const scoring = filtered.filter(row => row.category === "Scoring");
+      const positions = filtered.filter(row => row.category === "Position");
+
+      renderStandardRecords(gameResults, gameResultGrid, gameResultSection);
+      renderStandardRecords(scoring, scoringGrid, scoringSection);
+      renderPositionRecords(positions);
+    }
+
+    async function loadRecordBook() {
+      try {
+        const response = await fetch(recordBookCsvUrl);
+        if (!response.ok) throw new Error("Could not load record book.");
+
+        const rows = parseCSV(await response.text());
+        rows.shift();
+
+        recordData = rows
+          .map(row => ({
+            scope: row[0]?.trim() || "",
+            season: row[1]?.trim() || "",
+            category: row[2]?.trim() || "",
+            record: row[3]?.trim() || "",
+            holder: row[4]?.trim() || "",
+            player: row[5]?.trim() || "",
+            owner: row[6]?.trim() || "",
+            position: row[7]?.trim() || "",
+            value: row[8]?.trim() || "",
+            context: row[9]?.trim() || "",
+            order: Number(row[10]) || 0
+          }))
+          .filter(row => row.scope && row.season && row.category);
+
+        updateSeasonOptions();
+        renderRecordBook();
+      } catch (error) {
+        console.error(error);
+        gameResultGrid.innerHTML = `
+          <article class="record-card">
+            <h3>Unable to load record book.</h3>
+          </article>
+        `;
+        scoringSection.hidden = true;
+        positionSection.hidden = true;
+      }
+    }
+
+    scopeButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        currentScope = button.dataset.scope;
+
+        scopeButtons.forEach(item => item.classList.remove("active"));
+        button.classList.add("active");
+
+        updateSeasonOptions();
+        renderRecordBook();
+      });
+    });
+
+    seasonSelector.addEventListener("change", renderRecordBook);
+
+    loadRecordBook();
+  </script>
+
 </body>
 </html>
